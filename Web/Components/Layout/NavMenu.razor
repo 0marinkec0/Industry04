@@ -1,0 +1,177 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager _navigationManager
+@inject Blazored.LocalStorage.ILocalStorageService _localStorageService
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+
+        <!-- Logo -->
+        <NavLink class="navbar-brand fw-bold" href="/">
+            Industry04
+        </NavLink>
+
+        <!-- Mobile menu button -->
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar content -->
+        <div class="collapse navbar-collapse" id="mainNavbar">
+
+            <!-- Left side -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All"> Home
+                    </NavLink>
+                </li>
+
+                <!-- Dropdown -->
+@*                 <li class="nav-item dropdown">
+
+                    <a class="nav-link dropdown-toggle"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Page 1
+                    </a>
+
+                     <ul class="dropdown-menu">
+                        <li>
+                            <NavLink class="dropdown-item" href="/page1-1">
+                                Page 1-1
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="/page1-2">
+                                Page 1-2
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink class="dropdown-item" href="/page1-3">
+                                Page 1-3
+                            </NavLink>
+                        </li>
+                    </ul> 
+                </li> *@
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="statistics">
+                        Statistics
+                    </NavLink>
+                </li>
+
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="readings">
+                        Readings
+                    </NavLink>
+                </li>
+
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="realtime">
+                        Realtime data
+                    </NavLink>
+                </li>
+            </ul>
+
+            <!-- Right side -->
+            <ul class="navbar-nav">
+                <AuthorizeView>
+                    <!-- USER IS LOGGED IN -->
+                    <Authorized>
+                        <li class="nav-item">
+                            <span class="nav-link">
+                                <i class="bi bi-person-circle me-1"></i>
+                                @context.User.Identity?.Name
+                            </span>
+                        </li>
+
+                        <li class="nav-item" style="cursor: pointer;">
+                            <NavLink class="nav-link" @onclick="Logout">
+                                <i class="bi bi-person-plus me-1"></i> Logout
+                            </NavLink>
+                        </li>
+
+
+                    </Authorized>
+                    <!-- USER IS NOT LOGGED IN -->
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link"  href="register">
+                                <i class="bi bi-person-plus me-1"></i> Sign Up
+                            </NavLink>
+                        </li>
+
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="login">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                            </NavLink>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+@* <div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href=""Industry04</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="realtime">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Realtime
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="statistics">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Statistics
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="readings">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Readings
+            </NavLink>
+        </div>
+
+        <AuthorizeView>
+             <Authorized>
+                <div class="bottom-link nav-item px-3" style="cursor: pointer;">
+                    <NavLink class="nav-link" @onclick ="Logout">
+                        <span class="bi bi-box-arrow-right" aria-hidden="true"> </span>  Logout
+                    </NavLink>
+                </div>
+             </Authorized>
+         </AuthorizeView>
+    </nav>
+</div>
+ *@
+@code {
+    private async Task Logout()
+    {
+        await _localStorageService.ClearAsync();
+        _navigationManager.NavigateTo("/login", true);
+    }
+}

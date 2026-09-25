@@ -1,0 +1,88 @@
+﻿@page "/realtime"
+@using Shared.Respons
+@using Web.Components.Helper
+@using Web.Services
+@inject HubService _hubService
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<h1>Live data reading</h1>
+
+
+@if (_sensors.Count == 0)
+{
+    <p>No active data...wait or check connection with ESP32</p>
+}
+else
+{
+    @foreach (var sensor in _sensors)
+    {
+    <div class="container-fluid py-4">
+        <div class="row g-4">
+
+            <!-- SENSOR  -->
+            <div class="col-12 col-xl-5">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-thermometer-half me-2"></i>
+                                @sensor.Type @GetUnitHelper.GetUnit(sensor.Type!)
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <!-- Value -->
+                            <div class="col-4">
+                                <div class="text-muted small">
+                                    Value
+                                </div>
+                                <div class="fs-3 fw-bold">                                     
+                                    @sensor.Value @GetUnitHelper.GetUnit(sensor.Type!)
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    }
+}
+
+@code{
+
+    private readonly List<SensorReading> _sensors = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubService.SensorReadingUpdate += OnSensorUpdated;
+
+        await _hubService.StartAsync();
+    }
+
+    private async void OnSensorUpdated(SensorReading sensor)
+    {
+        var existing = _sensors.FirstOrDefault(x => x.Type == sensor.Type);
+
+        if (existing is null)
+        {
+            _sensors.Add(sensor);
+        }
+        else
+        {
+            existing.Value = sensor.Value;
+            existing.Type = sensor.Type;
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        _hubService.SensorReadingUpdate -= OnSensorUpdated;
+    }
+}

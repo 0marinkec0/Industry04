@@ -1,0 +1,86 @@
+﻿@page "/readings"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Routing
+@using Shared.Respons
+@using Shared.Respons.Enum
+@using Web.Common.Exceptions
+@using Web.Components.Helper
+@using Web.Services
+@inject ApiService _apiService
+@attribute [StreamRendering]
+@attribute [Authorize]
+
+<PageTitle>Weather</PageTitle>
+
+
+<h1>Sensor readings</h1>
+
+<p>All sensor reading in database</p>
+
+@if (readings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="mb-4">
+        <select class="form-select form-select-sm w-auto" @bind="selectedType" @bind:after="LoadSensors">
+            <option value="">Select sensor type</option>
+            <option value="@SensorType.Temperature">Temperature</option>
+            <option value="@SensorType.Humidity">Humidity</option>
+        </select>
+    </div>
+
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>Sensor Type</th>
+                <th>Value @GetUnitHelper.GetUnit(selectedType.ToString()!)</th>
+                <th>Date and time</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reading in readings)
+            {
+                <tr>
+                    <td>@reading.Type</td>
+                    <td>@reading.Value @GetUnitHelper.GetUnit(reading.Type!)</td>                                               
+                    <td>@reading.DateTime.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (!string.IsNullOrEmpty(error))
+{
+
+        <div class="alert alert-danger col-8 col-md-6 col-lg-5 col-xl-4 mx-auto mb-3" role="alert">
+            @error
+        </div>
+}
+
+@code {
+
+    private SensorType? selectedType;
+    private List<SensorReading> readings = new();
+    private string? error;
+
+    private async Task LoadSensors()
+    {
+        if (selectedType == null)
+        {
+            readings = [];
+            return;
+        }
+
+        readings = await _apiService.Get<List<SensorReading>>($"/sensors/get-all-values-by-type?type={selectedType}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        selectedType = SensorType.Temperature;
+        readings = await _apiService.Get<List<SensorReading>>($"/sensors/get-all-values-by-type?type={selectedType}");
+    }
+
+}
