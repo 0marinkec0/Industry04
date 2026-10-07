@@ -1,0 +1,74 @@
+﻿@page "/Login"
+@using BlazorWeb.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using Shared.Requests
+@using Shared.Respons
+@using Shared.ResultService
+@using Web.Common.Exceptions
+@using Web.Components.Helper
+@using Web.Services
+@using Blazored.LocalStorage;
+@inject ApiService _apiService
+@inject NavigationManager _navigationManager
+@inject Blazored.LocalStorage.ILocalStorageService _localStorageService
+@inject AuthenticationStateProvider _authenticationStateProvider
+
+
+    <EditForm Model="@loginRequest" OnSubmit="SubmitLogin" FormName="loginForm">
+    <CustomValidation @ref="CustomValidation" />
+         <div class="row">
+            <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3 text-start">
+            <InputText class="form-control input" placeholder="Email" @bind-Value=loginRequest.Email />
+                <ValidationMessage For="@(() => loginRequest.Email)" />
+            </div>
+        </div>
+        <div class="row">
+                <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3 text-start">
+            <InputText class="form-control input" placeholder="Password" type="Password" @bind-Value=loginRequest.Password />
+            <ValidationMessage For="@(() => loginRequest.Password)" />
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3">
+                <SubmitButton @ref="submitButton">Login</SubmitButton>
+            </div>
+        </div> 
+    </EditForm>
+    @if (errorMessage.Count > 0)
+        {
+            foreach (var error in errorMessage)
+            {
+             <div class="alert alert-danger col-8 col-md-6 col-lg-5 col-xl-4 mx-auto mb-3" role="alert">
+                  @error.Message
+             </div>
+           }
+        }
+
+
+@code {
+
+    private List<FailureError> errorMessage = new();
+    private LoginRequest loginRequest = new();
+    private SubmitButton submitButton;
+
+    private CustomValidation CustomValidation;
+
+    private async Task SubmitLogin()
+    {
+        try
+        {
+            submitButton.Disable();
+            var tokenResponse = await _apiService.Post<LoginRequest, TokenResponse>("/auth/login", loginRequest);
+            await _localStorageService.SetItemAsync("accessToken", tokenResponse.AccessToken);
+
+            await ((JwtAuthenticationStateProvide)_authenticationStateProvider).InitializeAsync();
+            _navigationManager.NavigateTo("readings");
+        }
+        catch(ValidationException ex)
+        {
+            submitButton.Enable();
+            errorMessage = ex.ErrorsGrouped;
+            CustomValidation.AddErrors(ex.ErrorsGrouped);
+        }
+    }
+}

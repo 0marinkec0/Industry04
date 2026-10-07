@@ -14,8 +14,10 @@ namespace API.MinimalAPI.SensorAPI
                 //   var temeprature = await service.GetAllTemperatureMeasurements();
 
                 var temeprature = await mediator.Send(new GetAllTemperatureQuery(), default);
+                
                 return Results.Ok(temeprature);
-            });
+
+            }).RequireAuthorization();
         }
     }
 }

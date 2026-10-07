@@ -1,0 +1,89 @@
+﻿@page "/Register"
+@using BlazorWeb.Components
+@using Shared.Requests
+@using Shared.Respons
+@using Shared.ResultService
+@using Web.Common.Exceptions
+@using Web.Components.Helper
+@using Web.HttpHandlers
+@using Web.Services
+@inject ApiService _apiService
+
+@if(!IsRegistered)
+{
+<EditForm Model="@registerRequest" OnSubmit="SubmitRegister" FormName="registerForm">
+    <CustomValidation @ref="CustomValidation" />
+        <h2 class="text-uppercase text-center mb-5">Register</h2>
+         <div class="row">
+            <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3 text-start">
+                <InputText class="form-control input" placeholder="Email" @bind-Value=registerRequest.Email />
+                <ValidationMessage For="@(() => registerRequest.Email)" />
+            </div>
+        </div>
+        <div class="row">
+                <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3 text-start">
+                <InputText class="form-control input" placeholder="Password" type="password" @bind-Value=registerRequest.Password />
+                <ValidationMessage For="@(() => registerRequest.Password)" />
+            </div>
+        </div>
+        <div class="row">
+                <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3 text-start">
+                <InputText class="form-control input" placeholder="Confirm password" type="password" @bind-Value=registerRequest.ConfirmPassword />
+                <ValidationMessage For="@(() => registerRequest.ConfirmPassword)" />
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3">
+                <SubmitButton @ref="submitButton">Register</SubmitButton>
+            </div>
+        </div> 
+</EditForm>
+    <div class="row">
+        <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3">
+            <p>Already have an account? <a class="link" href="Login">Log in</a></p>
+        </div>
+    </div>
+
+    @if (errorMessage.Count>0)
+    {
+        foreach(var error in errorMessage)
+        {
+         <div class="alert alert-danger col-8 col-md-6 col-lg-5 col-xl-4 mx-auto mb-3" role="alert">
+            @error.Message
+         </div>
+        }
+    }
+}
+else
+{
+    <div class="col-8 offset-2 col-md-6 offset-md-3 col-lg-5 offset-lg-3point5 col-xl-4 offset-xl-4 mb-3">
+        <p>Register was successfull, confirmation token sent on cosole :)</p>
+    </div>
+}
+
+@code {
+    private RegisterRequest registerRequest = new();
+    private List<FailureError> errorMessage = new();
+
+    private SubmitButton submitButton;
+    private CustomValidation CustomValidation;
+
+    private bool IsRegistered;
+
+    private async Task SubmitRegister()
+    {
+        try
+        {
+            submitButton.Disable();
+            await _apiService.Post<RegisterRequest>("/auth/register", registerRequest);
+            IsRegistered = true;
+        }
+        catch (ValidationException ex)
+        {
+            submitButton.Enable();
+            errorMessage = ex.ErrorsGrouped;
+            CustomValidation.AddErrors(ex.ErrorsGrouped);
+        }
+    }
+}
+

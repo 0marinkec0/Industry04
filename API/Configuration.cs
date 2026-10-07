@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Carter;
 using Infrastructure;
 using Infrastructure.SignalR.Hubs;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -22,11 +23,22 @@ namespace API
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();          
-                       
+            services.AddSwaggerGen();
+
             services.AddScoped<IAlarmService, AlarmService>();
 
             services.AddCarter();
+
+             services.AddCors(options =>
+            {
+                options.AddPolicy("BlazorPolicy", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7051")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
 
             return services;
         }
@@ -39,10 +51,12 @@ namespace API
                 app.UseSwaggerUI();
             }
 
+            app.UseHttpsRedirection();
+
+            app.UseCors("BlazorPolicy");
+
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseHttpsRedirection();
 
             app.MapCarter();
 

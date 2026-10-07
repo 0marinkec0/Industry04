@@ -9,7 +9,7 @@ public static class FailureHandler
         result switch
         {
             { IsSuccess: true } => throw new InvalidOperationException(),
-            ValidationErrors validationErrors => Results.BadRequest( CreateProblemDetails(
+            IValidationErrors validationErrors => Results.BadRequest( CreateProblemDetails(
                         "Validation Error",
                         StatusCodes.Status400BadRequest,
                         result.Error,

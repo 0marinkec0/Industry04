@@ -15,7 +15,7 @@ namespace API.MinimalAPI.SensorAPI
                var response =  await mediator.Send(new GetAllValuesSensorTypeQuery(type));
 
                return Results.Ok(response);
-            });
+            }).RequireAuthorization();
         }
     }
 }

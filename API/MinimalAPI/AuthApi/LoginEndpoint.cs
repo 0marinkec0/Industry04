@@ -10,15 +10,24 @@ public class LoginEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("auth/login", async ([FromBody] LoginCommand command, IMediator mediator) =>
+        app.MapPost("auth/login", async ([FromBody] LoginCommand command, IMediator mediator, HttpResponse httpResponse) =>
         {
             var result = await mediator.Send(command);
             Console.WriteLine("ENTERED AUTH LOGIN ENDPOINT");
 
-            if (result.IsSuccess)
-                return Results.Ok(result.Value);
+            if (!result.IsSuccess)
+                return FailureHandler.HandleFailure(result);
 
-            return FailureHandler.HandleFailure(result);
+            httpResponse.Cookies.Append("refresh_token", result.Value.RefreshToken!, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/",
+                MaxAge = TimeSpan.FromDays(7)
+            });
+  
+             return Results.Ok(result.Value);
         });
     }
 }

@@ -13,7 +13,7 @@ namespace API.MinimalAPI.SensorAPI
                 var resposne = await mediator.Send(new GetSensorStatisticQuery());
 
                 return Results.Ok(resposne);
-            });
+            }).RequireAuthorization();
         }
     }
 }

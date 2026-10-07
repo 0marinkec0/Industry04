@@ -5,4 +5,4 @@ using Shared.ResultService;
 
 namespace Application.Features.Authentication.Login;
 
-public record LoginCommand(string email, string password) : IRequest<Result<TokensDTO>>;
+public record LoginCommand(string Email, string Password) : IRequest<Result<TokensDTO>>;

@@ -5,6 +5,9 @@ namespace Infrastructure.Identity;
 
 public class User : IdentityUser<int>
 {
+    public string? RefreshToken { get; set; }
+    public DateTime? ExpiresOnUtc { get; set; }
+
     public static User Create(string email, string userName)
     {
         return new User { UserName = userName, Email = email };

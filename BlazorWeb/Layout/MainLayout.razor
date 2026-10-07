@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using Web.Services
+@inherits LayoutComponentBase
+@inject Blazored.LocalStorage.ILocalStorageService _localStorageService
+@inject AuthenticationStateProvider _authenticationStateProvider
+
+<NavMenu />
+
+<main>
+    <div class="container-fluid py-4">
+        @Body
+    </div>
+</main>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+@* 
+@code{
+
+    private string? email;
+
+    protected override async Task OnInitializedAsync()
+    {
+            _authenticationStateProvider.AuthenticationStateChanged += AuthenticationStateChanged;
+    }
+
+    private async void AuthenticationStateChanged(Task<AuthenticationState> task)
+    {
+        try
+        {
+            await LoadUser();
+
+            await InvokeAsync(StateHasChanged);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    private async Task LoadUser()
+    {
+        var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
+
+        var user = state.User;
+
+        email = user.FindFirst(ClaimTypes.Email)?.Value ?? "";
+    }
+} *@

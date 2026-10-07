@@ -50,22 +50,36 @@ public class IdentityService : IIdentityService
             return Result<TokensDTO>.Failure(new Error(code: "DomainError.EmailNotConfirmed", message: $"Email {email} is not confirmed"));
         }
 
-
-        // await _signInManager.SignInAsync(user, isPersistent: false);
         var claims = User.GetClaims(user);
       
         var token = await _jwtTokenService.GenerateUserTokenService(claims, user);
 
         return Result<TokensDTO>.Success(token);
     }
-    
+
+    public async Task<Result<TokensDTO>> LoginWithRefreshToken(string refreshToken)
+    {
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            return Result<TokensDTO>.Failure(new Error("DomainError.RefreshToken", message: "Refresh token is null or empty"));
+        }
+
+        var user = _userManager.Users.FirstOrDefault(x => x.RefreshToken == refreshToken);
+
+        if(user is null || user.ExpiresOnUtc < DateTime.UtcNow)
+        {
+            return Result<TokensDTO>.Failure(new Error("DomainError.RefreshToken", message: "Refresh token has expired"));
+        }
+
+        var claims = User.GetClaims(user);
+
+        var token = await _jwtTokenService.GenerateUserTokenService(claims, user);;
+
+        return Result<TokensDTO>.Success(token);
+    }
+
     public async Task<Result> Register(string email, string password)
     {
-       /* var user = await _userManager.FindByEmailAsync(email);
-
-        if (user is not null)
-            return Result.Failure(new Error(code: "Identity.Register", message: $"User with given {email} already exist in database"));
-       */
         var user = User.Create(email,email);
 
         var registerUser = await _userManager.CreateAsync(user, password);
@@ -87,6 +101,18 @@ public class IdentityService : IIdentityService
         return Result<string>.Success(token);
     }
 
+    public async Task<Result> RevokeRefreshToken(string email)
+    {
+        var user = CheckUserByEmail(email);
+
+        user.Result.Value.RefreshToken = null;
+        user.Result.Value.ExpiresOnUtc = null;
+
+        await _userManager.UpdateAsync(user.Result.Value);
+
+        return Result.Success();
+    }
+
     public async Task<Result> ConfirmEmailAsync(string email, string token)
     {
         var user = await CheckUserByEmail(email);
@@ -94,7 +120,6 @@ public class IdentityService : IIdentityService
         await _userManager.ConfirmEmailAsync(user.Value, token);
 
         return Result.Success();
-
     }
 
     private async Task<Result<User>> CheckUserByEmail(string email)
