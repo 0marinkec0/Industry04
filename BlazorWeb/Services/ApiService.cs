@@ -15,9 +15,8 @@ namespace Web.Services
         public async Task<TResponse> Get<TResponse>(string relativeUri)
         {
             var httpResponse = await _httpClient.GetAsync(relativeUri, HttpCompletionOption.ResponseContentRead);
-            return await httpResponse.Content.ReadFromJsonAsync<TResponse>();
+            return (await httpResponse.Content.ReadFromJsonAsync<TResponse>())!;
         }
-
         public async Task Post<TRequest>(string relativeUrl, TRequest request)
         {
             var response = await _httpClient.PostAsJsonAsync(relativeUrl, request);
@@ -28,7 +27,21 @@ namespace Web.Services
         {
             var response = await _httpClient.PostAsJsonAsync(relativeUrl, request);
 
-            return await response.Content.ReadFromJsonAsync<TResponse>();
+            return (await response.Content.ReadFromJsonAsync<TResponse>())!;
+        }
+
+        public async Task Delete(string relativeUrl)
+        { 
+            var response = await _httpClient.DeleteAsync(relativeUrl);
+
+            var content = await response.Content.ReadAsStringAsync();
+        }
+
+        public async Task Put<TRequest>(string relativeUrl, TRequest request)
+        {
+            var response = await _httpClient.PutAsJsonAsync<TRequest>(relativeUrl, request);
+
+            var content = await response.Content.ReadAsStringAsync();
         }
     }
 }

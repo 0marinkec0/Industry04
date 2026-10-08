@@ -4,7 +4,7 @@ using MediatR;
 
 namespace API.MinimalAPI.AlarmAPI
 {
-    public class AlarmRulecCreateEndpoint : ICarterModule
+    public class AlarmRuleCreateEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {

@@ -1,4 +1,4 @@
-﻿using Shared.Respons.Enum;
+﻿using Shared.Enum;
 
 namespace Web.Components.Helper
 {

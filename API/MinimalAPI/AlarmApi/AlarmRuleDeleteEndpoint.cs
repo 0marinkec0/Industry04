@@ -9,16 +9,15 @@ namespace API.MinimalAPI.AlarmAPI
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapDelete("alarm-rules/delete", async ([FromBody] AlarmRuleDeleteCommand command, IMediator mediator) =>
+            app.MapDelete("alarm-rules/delete/{id}", async (int id, IMediator mediator) =>
             {
 
-                var result = await mediator.Send(command);
+                var result = await mediator.Send(new AlarmRuleDeleteCommand(id));
 
                 if (result.IsSuccess)
                     return Results.Ok();
 
                 return Results.BadRequest();
-
             });
         }
     }

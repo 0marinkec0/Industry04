@@ -25,7 +25,7 @@ namespace BlazorWeb.HttpHandlers
         {
             if (await ShouldRefreshToken())
             {
-                if (await _refreshTokenService.TryRefreshToken())
+                if (await _refreshTokenService.GetRefreshTokenAsync())
                 {
                     var accessToken = await _localStorageService.GetItemAsync<string>("accessToken");
                      request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);

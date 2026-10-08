@@ -1,4 +1,4 @@
-﻿namespace Shared.Respons.Enum;
+﻿namespace Shared.Enum;
 
 public enum SensorType
 {

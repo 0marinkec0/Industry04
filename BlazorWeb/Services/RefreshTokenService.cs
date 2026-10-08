@@ -21,7 +21,7 @@ namespace BlazorWeb.Services
         }
 
 
-        public async Task<bool> TryRefreshToken()
+        public async Task<bool> GetRefreshTokenAsync()
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "auth/login-with-refresh-token");
 
@@ -32,8 +32,8 @@ namespace BlazorWeb.Services
 
             var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
 
-            await _localStorageService.SetItemAsync("accessToken", tokenResponse.AccessToken);
-            ((JwtAuthenticationStateProvide)_authenticationStateProvider).NotifyUserAuthentication(tokenResponse.AccessToken);
+            await _localStorageService.SetItemAsync("accessToken", tokenResponse!.AccessToken);
+            ((JwtAuthenticationStateProvide)_authenticationStateProvider).NotifyUserAuthentication(tokenResponse.AccessToken!);
 
             return true;
         }

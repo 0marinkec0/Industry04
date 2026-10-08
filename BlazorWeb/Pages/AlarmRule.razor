@@ -1,0 +1,162 @@
+﻿@page "/alarm-rule"
+@using BlazorWeb.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Routing
+@using Shared.Enum
+@using Shared.Requests
+@using Shared.Respons
+@using Web.Common.Exceptions
+@using Web.Components.Helper
+@using Web.Services
+@inject NavigationManager _navigationManager
+@inject ApiService _apiService
+@inject Blazored.LocalStorage.ILocalStorageService _localStorageService
+@attribute [Authorize]
+
+<div>
+    <h3>Create alarm rule</h3>
+<EditForm Model="@alarmRuleRequest" OnValidSubmit="@CreateRuleButton">
+    <div class="row g-3">
+
+        <div class="col-md-3">
+            <label for="inputRuleName" class="form-label">Rule name</label>
+            <InputText @bind-Value="alarmRuleRequest.Name"
+                       class="form-control"
+                       id="inputRuleName" />
+        </div>
+
+        <div class="col-md-2">
+            <label for="sensorType" class="form-label">Sensor type</label>
+            <InputSelect @bind-Value="alarmRuleRequest.SensorType" class="form-select" id="sensorType">
+                <option value="">Select sensor type</option>
+                <option value="@SensorType.Temperature">Temperature</option>
+                <option value="@SensorType.Humidity">Humidity</option>
+            </InputSelect>
+        </div>
+
+        <div class="col-md-2">
+            <label for="operator" class="form-label">Operator</label>
+            <InputSelect @bind-Value="alarmRuleRequest.Operator" class="form-select" id="operator">
+                <option value="">Select operation</option>
+                <option value="@Operator.Greater">Greater</option>
+                <option value="@Operator.GreaterOrEqual">GreaterOrEqual</option>
+                <option value="@Operator.Less">Less</option>
+                <option value="@Operator.LessOrEqual">LessOrEqual</option>
+                <option value="@Operator.Equal">Equal</option>
+            </InputSelect>
+        </div>
+
+        <div class="col-md-2">
+            <label for="thresholdValue" class="form-label">Threshold value</label>
+            <InputNumber @bind-Value="alarmRuleRequest.Threshold" class="form-control" id="thresholdValue" step="0.1" />
+        </div>
+
+            <div class="col-md-2 d-flex align-items-end justify-content-cente">
+                <SubmitButton @ref="submitButton">@(editRuleId.HasValue ? "Update" : "Create")</SubmitButton>
+        </div>
+    </div>
+</EditForm>
+</div>
+
+
+<div class="mt-lg-5">
+    <h3>Existing rules</h3>
+<table class="table">
+    <thead class="table-dark">
+        <tr>
+            <th>Rule name</th>
+            <th>Sensor Type</th>
+            <th>Operator</th>
+            <th>Threshold</th>
+            <th>#</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rule in alarmRuleResponse)
+        {
+            <tr>
+                <td>@rule.Name</td>
+                <td>@rule.SensorType</td>
+                <td>@rule.Operator</td>
+                <td>@rule.Threshold</td>
+                <td>
+                <button type="button"
+                         class="btn btn-danger"
+                         @onclick="() => EditRule(rule)">
+                     Edit
+                </button>
+                <button type="button"
+                        class="btn btn-danger"
+                        @onclick="() => DeleteRule(rule.Id)">
+                    Delete
+                </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+
+@code {
+
+    private AlarmRuleRequest alarmRuleRequest = new();
+    private SubmitButton submitButton;
+    private List<AlarmRuleResponse> alarmRuleResponse = new();
+    private int? editRuleId = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllRules();
+    }
+
+    private async Task CreateRuleButton()
+    {
+        try
+        {
+            if (editRuleId.HasValue)
+            {
+                submitButton.Disable();
+                await _apiService.Put<AlarmRuleRequest>($"alarm-rules/update/{editRuleId}", alarmRuleRequest);
+                await GetAllRules();
+                editRuleId = null;
+                submitButton.Enable();
+            }
+            else
+            {
+                submitButton.Disable();
+                await _apiService.Post<AlarmRuleRequest>("alarm-rules/create", alarmRuleRequest);
+                await GetAllRules();
+                submitButton.Enable();
+            }
+        }
+        catch (ApplicationException ex)
+        {
+            submitButton.Enable();
+        }      
+    }
+
+    private async Task GetAllRules()
+    {    
+        alarmRuleResponse = await _apiService.Get<List<AlarmRuleResponse>>("alarm-rules/get-alarm-rules");
+    }
+
+    private async Task DeleteRule(int ruleId)
+    {
+        await _apiService.Delete($"alarm-rules/delete/{ruleId}");
+        await GetAllRules();
+    }
+
+    private void EditRule(AlarmRuleResponse ruleRespone)
+    {
+        editRuleId = ruleRespone.Id;
+
+        alarmRuleRequest = new AlarmRuleRequest
+        {
+            Name = ruleRespone.Name,
+            SensorType = Enum.Parse<SensorType>(ruleRespone.SensorType),
+            Operator = Enum.Parse<Operator>(ruleRespone.Operator),
+            Threshold = ruleRespone.Threshold
+        };      
+    }
+}

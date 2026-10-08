@@ -1,8 +1,10 @@
 ﻿@page "/realtime"
+@using Microsoft.AspNetCore.Authorization
 @using Shared.Respons
 @using Web.Components.Helper
 @using Web.Services
 @inject HubService _hubService
+@attribute [Authorize]
 
 <PageTitle>Home</PageTitle>
 
