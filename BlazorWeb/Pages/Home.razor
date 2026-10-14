@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using Shared.Respons
+@using Web.Services
+@inject HubService _hubService
 
 <PageTitle>IoT 4.0 - Smart Industrial Monitoring</PageTitle>
 
@@ -388,3 +391,60 @@
         </div>
     </footer>
 </div> *@
+
+@if (alarmNotificationResponses == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>Device</th>
+                <th>Triggered at value</th>
+                <th>Date and time</th>
+                <th>Is resolved</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var alarm in alarmNotificationResponses)
+            {
+                <tr>
+                    <td>@alarm.DeviceId</td>
+                    <td>@alarm.TriggerValue</td>
+                    <td>@alarm.TriggerTime.ToShortDateString()</td>
+                    <td>@alarm.IsResolved</td>
+                    <td>@alarm.SensorType</td>
+                    <td>@alarm.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code{
+
+    private List<AlarmNotificationResponse> alarmNotificationResponses = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _hubService.AlarmNotificationResponseUpdate += OnAlarmUpdate;
+
+        await _hubService.StartAsync();
+    }
+     
+    private async void OnAlarmUpdate(List<AlarmNotificationResponse> alarmNotification)
+    {
+        alarmNotificationResponses = alarmNotification;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        _hubService.AlarmNotificationResponseUpdate -= OnAlarmUpdate;
+    }
+}

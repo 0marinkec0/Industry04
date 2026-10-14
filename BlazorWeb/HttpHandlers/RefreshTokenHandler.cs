@@ -46,7 +46,7 @@ namespace BlazorWeb.HttpHandlers
 
             var user = authState.User;
 
-            if (!user.Identity.IsAuthenticated)
+            if (!user.Identity!.IsAuthenticated)
                 return false;
 
             var expClaim = user.FindFirst("exp");

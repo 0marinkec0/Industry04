@@ -1,10 +1,9 @@
 ﻿using Domain.Enities;
 using Shared.ResultService;
 
-namespace Application.Interfaces
+namespace Application.Interfaces;
+
+public interface IAlarmService
 {
-    public interface IAlarmService
-    {
-        public Task<Result> EvaluateAlarmAsync(Sensor sensorMeasurement);
-    }
+    public Task<Result> EvaluateAlarmAsync(Sensor sensorMeasurement);
 }

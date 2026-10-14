@@ -8,6 +8,8 @@ public class HubService : IAsyncDisposable
     private readonly HubConnection _connection;
 
     public event Action<SensorReading>? SensorReadingUpdate;
+
+    public event Action<List<AlarmNotificationResponse>>? AlarmNotificationResponseUpdate;
     public HubService()
     {
         _connection = new HubConnectionBuilder()
@@ -21,7 +23,17 @@ public class HubService : IAsyncDisposable
                 Console.WriteLine($"RECEIVED SENSOR: {sensor.Type} = {sensor.Value}");
 
                 SensorReadingUpdate?.Invoke(sensor);
-            });      
+            });
+
+        _connection.On<List<AlarmNotificationResponse>>("AlarmNotifiactionUpdate",
+            alarm =>
+            {
+                foreach (var a in alarm) { 
+                Console.WriteLine($"RECEIVED ALARM: {a.SensorType} trigger value {a.TriggerValue}");
+            }
+
+                AlarmNotificationResponseUpdate?.Invoke(alarm);
+            });
     }
 
     public async Task StartAsync()

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260927093841_InitialMigration")]
+    [Migration("20261014095904_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -20,11 +20,32 @@ namespace Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.31");
 
+            modelBuilder.Entity("Domain.Enities.Actuator", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Mode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Actuators");
+                });
+
             modelBuilder.Entity("Domain.Enities.AlarmEvent", b =>
                 {
                     b.Property<int>("AlarmId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DeviceId")
                         .HasColumnType("TEXT");
@@ -41,7 +62,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("TriggerTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("TriggerVlaue")
+                    b.Property<double>("TriggerValue")
                         .HasColumnType("REAL");
 
                     b.HasKey("AlarmId");
@@ -72,6 +93,31 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AlarmRules");
+                });
+
+            modelBuilder.Entity("Domain.Enities.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ActuatorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActuatorId");
+
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("Domain.Enities.Sensor", b =>
@@ -297,6 +343,17 @@ namespace Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Enities.Schedule", b =>
+                {
+                    b.HasOne("Domain.Enities.Actuator", "Actuator")
+                        .WithMany("Schedules")
+                        .HasForeignKey("ActuatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Actuator");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -346,6 +403,11 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Enities.Actuator", b =>
+                {
+                    b.Navigation("Schedules");
                 });
 #pragma warning restore 612, 618
         }

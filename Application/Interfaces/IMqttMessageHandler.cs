@@ -1,7 +1,6 @@
-﻿namespace Application.Interfaces
+﻿namespace Application.Interfaces;
+
+public interface IMqttMessageHandler
 {
-    public interface IMqttMessageHandler
-    {
-        Task HandleAsync(string topic, string payload);
-    }
+    Task HandleAsync(string topic, string payload);
 }

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Application.Interfaces;
 
-namespace Application.Interfaces
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task SendConfirmationEmail(string email, string token);
-    }
+    Task SendConfirmationEmail(string email, string token);
 }

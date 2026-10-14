@@ -40,13 +40,14 @@ namespace Infrastructure.Messaging
                 Value = sensor.Value,
                 DateTime = sensor.Time
             };
+
             await _hubContext.Clients.All.SensorReadingStatusUpdate(sensorReading);
              
-            /*await _iotContext.Sensors.AddAsync(sensor);
+            await _iotContext.Sensors.AddAsync(sensor);
 
             await _iotContext.SaveChangesAsync();
 
-            await _alarmService.EvaluateAlarmAsync(sensor);*/
+            await _alarmService.EvaluateAlarmAsync(sensor);
         }
     }
 }

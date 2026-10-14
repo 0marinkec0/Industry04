@@ -16,7 +16,8 @@ namespace Application.Features.Queries.GetAllValuesSensorType
 
         public async Task<List<SensorDTO>> Handle(GetAllValuesSensorTypeQuery request, CancellationToken cancellationToken)
         {
-            var response = await _iotContext.Sensors.Where(x => x.Type == request.type).Select(n => new SensorDTO
+            var response = await _iotContext.Sensors.Where(x => x.Type == request.type)
+                .Select(n => new SensorDTO
             {
                 Type = n.Type.ToString(),
                 Value = n.Value,

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.MinimalAPI.AlarmApi
 {
-    public class UpdateAlarmRuleEndpoint : ICarterModule
+    public class AlarmRuleUpdateEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {

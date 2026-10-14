@@ -9,9 +9,9 @@ namespace API.MinimalAPI.ActuatorAPI
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("actuator/control", async (string state, IMediator mediator) => 
-            {
-                var result = await mediator.Send(new ActuatorControlCommand(state));
+            app.MapPost("actuator/control", async (int id,string state, IMediator mediator) => 
+            {       
+                var result = await mediator.Send(new ActuatorControlCommand(id, state));
 
                 return Results.Ok(result);
             });

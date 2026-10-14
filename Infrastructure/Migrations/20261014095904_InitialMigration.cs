@@ -12,17 +12,32 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Actuators",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Mode = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actuators", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AlarmEvents",
                 columns: table => new
                 {
                     AlarmId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     DeviceId = table.Column<string>(type: "TEXT", nullable: true),
-                    TriggerVlaue = table.Column<double>(type: "REAL", nullable: false),
+                    TriggerValue = table.Column<double>(type: "REAL", nullable: false),
                     TriggerTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ResolvedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsResolved = table.Column<bool>(type: "INTEGER", nullable: false),
-                    SensorType = table.Column<string>(type: "TEXT", nullable: true)
+                    SensorType = table.Column<string>(type: "TEXT", nullable: true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,6 +116,28 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Schedules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ActuatorId = table.Column<int>(type: "INTEGER", nullable: false),
+                    DayOfWeek = table.Column<int>(type: "INTEGER", nullable: false),
+                    StartTime = table.Column<TimeOnly>(type: "TEXT", nullable: false),
+                    EndTime = table.Column<TimeOnly>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Schedules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Schedules_Actuators_ActuatorId",
+                        column: x => x.ActuatorId,
+                        principalTable: "Actuators",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,6 +258,11 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Schedules_ActuatorId",
+                table: "Schedules",
+                column: "ActuatorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
                 table: "UserClaims",
                 column: "UserId");
@@ -260,6 +302,9 @@ namespace Infrastructure.Migrations
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
+                name: "Schedules");
+
+            migrationBuilder.DropTable(
                 name: "Sensors");
 
             migrationBuilder.DropTable(
@@ -273,6 +318,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Actuators");
 
             migrationBuilder.DropTable(
                 name: "Roles");

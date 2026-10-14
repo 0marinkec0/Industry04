@@ -4,6 +4,7 @@
 @using Web.Components.Helper
 @using Web.Services
 @inject HubService _hubService
+@inject ApiService _apiService
 @attribute [Authorize]
 
 <PageTitle>Home</PageTitle>
@@ -56,11 +57,13 @@ else
 
 @code{
 
-    private readonly List<SensorReading> _sensors = [];
+    private List<SensorReading> _sensors = new();
 
     protected override async Task OnInitializedAsync()
     {
         _hubService.SensorReadingUpdate += OnSensorUpdated;
+
+        _sensors = await _apiService.Get<List<SensorReading>>("/sensor/get-latest-sensor-readings");
 
         await _hubService.StartAsync();
     }

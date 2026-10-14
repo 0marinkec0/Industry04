@@ -20,7 +20,6 @@ namespace BlazorWeb.Services
             _authenticationStateProvider = authenticationStateProvider;
         }
 
-
         public async Task<bool> GetRefreshTokenAsync()
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "auth/login-with-refresh-token");
@@ -41,6 +40,7 @@ namespace BlazorWeb.Services
         public async Task RevokeRefreshToken()
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+
             var user = authState.User;
 
             string email = user.FindFirst(ClaimTypes.Email)!.Value;

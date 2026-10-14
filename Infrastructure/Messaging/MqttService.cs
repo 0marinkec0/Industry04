@@ -36,6 +36,15 @@ namespace Infrastructure.Messaging
             await _mqttClient.PublishAsync(message, cancellationToken);
         }
 
+        public async Task PublishByteAsync(string topic, byte[] payload, CancellationToken cancellationToken = default)
+        {
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(payload)
+                .Build();
+
+            await _mqttClient.PublishAsync(message, cancellationToken);
+        }
         public async Task SubscribeAsync(string topic, CancellationToken cancellationToken = default)
         {
             var subscribeOptions = new MqttClientSubscribeOptionsBuilder()
