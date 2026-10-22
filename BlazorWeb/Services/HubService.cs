@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using Shared.Respons;
+using Shared.Respons.Alarm;
+using Shared.Respons.Sensor;
 
 namespace Web.Services;
 

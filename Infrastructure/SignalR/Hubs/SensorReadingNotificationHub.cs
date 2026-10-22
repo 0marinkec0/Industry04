@@ -1,6 +1,6 @@
 ﻿using Domain.Enities;
 using Microsoft.AspNetCore.SignalR;
-using Shared.Respons;
+using Shared.Respons.Sensor;
 
 namespace Infrastructure.SignalR.Hubs
 {

@@ -2,22 +2,19 @@
 using Carter;
 using MediatR;
 
-namespace API.MinimalAPI.AlarmApi
+namespace API.MinimalAPI.AlarmApi;
+public class GetAlarmRuleEndpoint : ICarterModule
 {
-    public class GetAlarmRuleEndpoint : ICarterModule
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
-        public void AddRoutes(IEndpointRouteBuilder app)
+        app.MapGet("alarm-rules/get-alarm-rules", async (IMediator mediator) =>
         {
-            app.MapGet("alarm-rules/get-alarm-rules", async (IMediator mediator) =>
-            {
+            var result = await mediator.Send(new AlarmRulesGetQuery(), default);
 
-                var result = await mediator.Send(new AlarmRulesGetQuery(), default);
+            if (result != null)
+                return Results.Ok(result);
 
-                if (result != null)
-                    return Results.Ok(result);
-
-                return Results.BadRequest();
-            });
-        }
+            return Results.BadRequest();
+        });
     }
 }

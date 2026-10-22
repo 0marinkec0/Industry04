@@ -1,22 +1,24 @@
-﻿using Application.Features.Commands.AlarmRules.UpdateRule;
-using Carter;
+﻿using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Requests.Alarm;
 
-namespace API.MinimalAPI.AlarmApi
+namespace API.MinimalAPI.AlarmApi;
+
+public class AlarmRuleUpdateEndpoint : ICarterModule
 {
-    public class AlarmRuleUpdateEndpoint : ICarterModule
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
-        public void AddRoutes(IEndpointRouteBuilder app)
+        app.MapPut("alarm-rules/update/{id}", async (int id, [FromBody] AlarmRuleRequest request, IMediator mediator) =>
         {
-            app.MapPut("alarm-rules/update/{id}", async (int id, [FromBody] AlarmRuleUpdateCommand command, IMediator mediator) =>
-            {
-                var IdRequest = command with { id = id };
+            var mappedCommand = request.ToCommand(id);
 
-                await mediator.Send(IdRequest);
+            var result = await mediator.Send(mappedCommand);
 
+            if(result.IsSuccess)
                 return Results.Ok();
-            });
-        }
+
+            return Results.BadRequest(result);
+        });
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Shared.Requests;
+﻿namespace Shared.Requests.Auth;
 
 public class LoginRequest
 {

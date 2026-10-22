@@ -1,4 +1,4 @@
-﻿namespace Shared.Respons
+﻿namespace Shared.Respons.Sensor
 {
     public class SensorReading
     {

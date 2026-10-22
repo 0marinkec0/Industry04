@@ -1,5 +1,5 @@
 ﻿using Blazored.LocalStorage;
-using Shared.Respons;
+using Shared.Respons.Auth;
 using System.Net.Http.Headers;
 
 namespace Web.HttpHandlers

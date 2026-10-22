@@ -1,11 +1,10 @@
-﻿namespace Domain.Enums
+﻿namespace Domain.Enums;
+
+public enum Operator
 {
-    public enum  Operator
-    {
-        Greater,
-        Less,
-        GreaterOrEqual,
-        LessOrEqual,
-        Equal
-    }
+    Greater,
+    Less,
+    GreaterOrEqual,
+    LessOrEqual,
+    Equal
 }

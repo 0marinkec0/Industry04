@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.ActuatorControl;
+﻿using Application.Features.Commands.ActuatorControl.ActuatorControl;
 using Carter;
 using MediatR;
 
@@ -9,7 +9,7 @@ namespace API.MinimalAPI.ActuatorAPI
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("actuator/control", async (int id,string state, IMediator mediator) => 
+            app.MapPost("actuator/control", async (int id, string state, IMediator mediator) => 
             {       
                 var result = await mediator.Send(new ActuatorControlCommand(id, state));
 

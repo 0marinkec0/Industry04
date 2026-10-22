@@ -3,8 +3,10 @@ using Application;
 using Application.Interfaces;
 using Carter;
 using Infrastructure;
+using Infrastructure.Database.Seeder;
 using Infrastructure.SignalR.Hubs;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
+using System.Reflection;
 
 namespace API
 {
@@ -23,9 +25,11 @@ namespace API
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options => options.CustomSchemaIds(type => type.FullName));
 
             services.AddScoped<IAlarmService, AlarmService>();
+
+            services.AddAutoMapper(config => { }, Assembly.GetExecutingAssembly());
 
             services.AddCarter();
 
@@ -61,6 +65,14 @@ namespace API
             app.MapCarter();
 
             app.MapHub<SensorReadingNotificationHub>("/sensor-readings-hub");
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var seeder = scope.ServiceProvider
+                    .GetRequiredService<ActuatorSeeder>();
+
+                seeder.SeedAsync().GetAwaiter().GetResult();
+            }
 
             return app;
         }

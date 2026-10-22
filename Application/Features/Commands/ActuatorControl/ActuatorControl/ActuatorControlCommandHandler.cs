@@ -4,7 +4,7 @@ using MediatR;
 using Shared.ResultService;
 
 
-namespace Application.Features.Commands.ActuatorControl;
+namespace Application.Features.Commands.ActuatorControl.ActuatorControl;
 
 public class ActuatorControlCommandHandler : IRequestHandler<ActuatorControlCommand, Result>
 {

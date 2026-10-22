@@ -1,6 +1,6 @@
 ﻿using Shared.Enum;
 
-namespace Shared.Requests;
+namespace Shared.Requests.Alarm;
 
 public class AlarmRuleRequest
 {

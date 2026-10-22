@@ -1,13 +1,15 @@
 ﻿@page "/Login"
 @using BlazorWeb.Components
+@using Blazored.LocalStorage;
 @using Microsoft.AspNetCore.Components.Authorization
 @using Shared.Requests
+@using Shared.Requests.Auth
 @using Shared.Respons
+@using Shared.Respons.Auth
 @using Shared.ResultService
 @using Web.Common.Exceptions
 @using Web.Components.Helper
 @using Web.Services
-@using Blazored.LocalStorage;
 @inject ApiService _apiService
 @inject NavigationManager _navigationManager
 @inject Blazored.LocalStorage.ILocalStorageService _localStorageService
@@ -43,7 +45,6 @@
              </div>
            }
         }
-
 
 @code {
 

@@ -23,6 +23,9 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<byte>("ByteId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Mode")
                         .HasColumnType("INTEGER");
 

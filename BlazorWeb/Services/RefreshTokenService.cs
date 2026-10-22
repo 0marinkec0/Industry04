@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Shared.Respons;
+using Shared.Respons.Auth;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using Web.Services;
