@@ -1,6 +1,6 @@
 ﻿using Shared.ResultService;
 
-namespace Application.Features.Commands.AlarmRules;
+namespace Application.Features.Errors;
 
 public class AlarmRulesError
 {

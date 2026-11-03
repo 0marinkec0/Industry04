@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Features.Errors;
+using Application.Interfaces;
 using Domain.Enums;
 using MediatR;
 using Shared.ResultService;
@@ -27,7 +28,7 @@ public class ActuatorControlCommandHandler : IRequestHandler<ActuatorControlComm
 
         byte parsedCommand = TryParseStringToEnum(upperCaseCommand);
 
-        if (!Enum.IsDefined(typeof(ActuatorId), request.ActuatorId))
+        if (!Enum.IsDefined(typeof(ActuatorId), (byte)request.ActuatorId))
         {
             return Result.Failure(ActuatorError.ActuatorIdNotFound);
         }

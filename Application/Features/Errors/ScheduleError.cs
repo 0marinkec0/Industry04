@@ -1,7 +1,6 @@
-﻿
-using Shared.ResultService;
+﻿using Shared.ResultService;
 
-namespace Application.Features.Commands.ScheduleRule;
+namespace Application.Features.Errors;
 
 public class ScheduleError
 {

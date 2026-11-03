@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.ActuatorControl;
+﻿using Application.Features.Errors;
 using Application.Interfaces;
 using Domain.Enities;
 using MediatR;
@@ -19,7 +19,7 @@ public class CreateScheduleCommandHandler : IRequestHandler<CreateScheduleComman
     public async Task<Result> Handle(CreateScheduleCommand request, CancellationToken cancellationToken)
     {
         var actuator = await _appDbContext.Actuators
-            .FirstOrDefaultAsync(x => x.Id == request.ActuatorId);
+          .FirstOrDefaultAsync(x => x.Id == request.ActuatorId);
 
         if (actuator == null)
         {

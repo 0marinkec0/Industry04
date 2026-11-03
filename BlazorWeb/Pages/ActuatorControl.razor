@@ -1,0 +1,277 @@
+﻿@page "/actuator-control"
+@using BlazorWeb.Components
+@using Microsoft.AspNetCore.Authorization
+@using Shared.Enum
+@using Shared.Requests.Actuator
+@using Shared.Requests.Schedule
+@using Shared.Respons.Actuator
+@using Shared.Respons.Schedule
+@using Web.Services
+@inject ApiService _apiService
+@attribute [StreamRendering]
+@attribute [Authorize]
+
+<div class="container-fluid px-0">
+
+ <h2 class="mb-4">Actuator Control</h2>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Mode</th>
+            @if (ShowState)
+            {
+                <th>State</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var actuator in actuatorResponse)
+        {
+            <tr @key="actuator.Id">
+                <td>@actuator.Name</td>
+                <td>@actuator.Id</td>
+                <td>
+                    <button type="button"
+                            class="btn btn-sm @(actuator.Mode == "Automatic"
+                                                            ? "btn-success"
+                                                            : "btn-outline-secondary")"
+                        aria-pressed="@(actuator.Mode == "Automatic")"
+                        @onclick="() => ToggleMode(actuator)">
+                    @actuator.Mode
+                </button>
+                </td>
+                 @if (actuator.Mode == "Manual")
+                {
+                    <td>
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-success btn-sm"
+                                @onclick='() => ActuatorStateControl(actuator.Id, "ON")'>
+                            ON
+                        </button>
+
+                        <button class="btn btn-danger btn-sm"
+                                @onclick='(() => ActuatorStateControl(actuator.Id, "OFF"))'>
+                            OFF
+                        </button>
+                    </div>
+                    </td>
+                } 
+            </tr>
+        }
+    </tbody>
+</table>
+
+ <section class="mt-5">
+
+  <h2 class="mb-4"> Schedule for automatic mode </h2>
+
+    <div class="card shadow-sm w-100">
+
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Create Schedule</h5>
+        </div>
+
+        <div class="card-body">
+
+            <EditForm Model="@scheduleRequest"
+                      OnValidSubmit="@CreateScheduleButton"
+                      FormName="createSchedule">
+
+                <DataAnnotationsValidator />
+
+                <div class="row g-3 align-items-end">
+
+                    <!-- Actuator -->
+                    <div class="col-12 col-md-2">
+                        <label for="actuatorId" class="form-label">
+                            Actuator
+                        </label>
+
+                        <select id="actuatorId"
+                                class="form-select"
+                                @bind="scheduleRequest.ActuatorId"
+                                required>
+
+                            <option value="0">Select actuator</option>
+
+                            @if (actuatorResponse != null)
+                            {
+                                @foreach (var actuator in actuatorResponse)
+                                {
+                                    <option value="@actuator.Id">
+                                        @actuator.Name (ID: @actuator.Id)
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+                    <!-- From Time -->
+                    <div class="col-12 col-md-2">
+                        <label for="fromTime" class="form-label">
+                            From Time
+                        </label>
+
+                        <input type="time"
+                               id="fromTime"
+                               class="form-control"
+                               @bind="scheduleRequest.StartTime"
+                               required>
+                    </div>
+
+                    <!-- Until Time -->
+                    <div class="col-12 col-md-2">
+                        <label for="untilTime" class="form-label">
+                            Until Time
+                        </label>
+
+                        <input type="time"
+                               id="untilTime"
+                               class="form-control"
+                               @bind="scheduleRequest.EndTime"
+                               required>
+                    </div>
+
+                    <!-- Day of Week -->
+                    <div class="col-12 col-md-4">
+                        <label for="dayOfWeek" class="form-label">
+                            Day of Week
+                        </label>
+
+                        <select id="dayOfWeek"
+                                class="form-select"
+                                @bind="scheduleRequest.DayOfWeek"
+                                required>
+
+                            <option value="">Select day</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+
+                        </select>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="col-12 col-md-2">
+                        <div class="d-flex gap-2">
+
+                            <SubmitButton @ref="submitButton">Submit</SubmitButton>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <ValidationSummary class="text-danger mt-3" />
+
+            </EditForm>
+
+            <!-- Result -->
+            <div id="result"
+                 class="alert alert-success mt-3 d-none">
+            </div>
+        </div>
+    </div>
+
+
+
+<div class="mt-4">
+   <table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>ActuatorId</th>
+            <th>DayOfWeek</th>
+            <th>StartTime</th>
+            <th>EndTime</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var schedule in scheduleResponse)
+        {
+            <tr @key="schedule.Id">
+                <td>@schedule.Id</td>
+                <td>@schedule.ActuatorId</td>
+                <td>@schedule.DayOfWeek</td>
+                <td>@schedule.StartTime</td>
+                <td>@schedule.EndTime</td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+
+ </section>
+</div>
+
+
+@code {
+    private List<ActuatorResponse> actuatorResponse = new();
+    private bool ShowState => actuatorResponse.Any(a => a.Mode == "Manual");
+
+    private ScheduleRequest scheduleRequest = new();
+    private List<ScheduleResponse> scheduleResponse = new();
+
+    private SubmitButton submitButton;
+
+    protected override async Task OnInitializedAsync()
+    {
+        actuatorResponse = await _apiService.Get<List<ActuatorResponse>>($"/actuator/get-actuators");
+        scheduleResponse = await _apiService.Get<List<ScheduleResponse>>("/schedule/get-schedules");
+    }
+
+    private async Task ToggleMode(ActuatorResponse actuator)
+    {
+        string mode = actuator.Mode == "Automatic" ? "Manual" : "Automatic";
+        string name = actuator.Name;
+        int id = actuator.Id;
+
+        if (Enum.TryParse<Mode>(mode, true, out var result))
+        {
+            var actuatorModeChangeRequest = new ActuatorModeChangeRequest
+            {
+                Mode = result
+            };
+
+            await _apiService.Put<ActuatorModeChangeRequest>($"actuator/mode-change/{id}", actuatorModeChangeRequest);
+            actuatorResponse = await _apiService.Get<List<ActuatorResponse>>($"/actuator/get-actuators");
+        }
+    }
+
+    private async Task ActuatorStateControl(int id, string state)
+    {
+        var queryParams = new Dictionary<string, string>
+        {
+             { "id", id.ToString() },
+             { "state", state }
+        };
+
+        await _apiService.PostQuery($"/actuator/control", queryParams);
+    }
+
+    private async Task CreateScheduleButton()
+    {
+        try
+        {
+            Console.WriteLine(scheduleRequest.ActuatorId);
+            Console.WriteLine(scheduleRequest.DayOfWeek);
+            Console.WriteLine(scheduleRequest.StartTime);
+            Console.WriteLine(scheduleRequest.EndTime);
+            submitButton.Disable();
+            await _apiService.Post<ScheduleRequest>("/schedule/create", scheduleRequest);
+        }
+        catch (ApplicationException ex)
+        {
+            submitButton.Enable();
+        }
+
+    }
+}

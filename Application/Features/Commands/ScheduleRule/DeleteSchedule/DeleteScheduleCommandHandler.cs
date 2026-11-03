@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Features.Errors;
+using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
