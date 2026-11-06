@@ -9,6 +9,7 @@ public static class ScheduleMappingExtensions
     {
         return new UpdateScheduleCommand(
             Id: id,
+            ActuatorId: request.ActuatorId,
             DayOfWeek: request.DayOfWeek,
             StartTime: request.StartTime,
             EndTime: request.EndTime);

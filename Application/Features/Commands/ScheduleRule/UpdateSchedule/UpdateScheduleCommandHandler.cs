@@ -35,6 +35,7 @@ public class UpdateScheduleCommandHandler : IRequestHandler<UpdateScheduleComman
             return Result.Failure(ScheduleError.DayOfWeekAlreadyExists);
         }
 
+        schedule.ActuatorId = request.ActuatorId;
         schedule.DayOfWeek = request.DayOfWeek;
         schedule.StartTime = request.StartTime;
         schedule.EndTime = request.EndTime; 

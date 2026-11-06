@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Web.HttpHandlers;
 using Web.Services;
-using Microsoft.AspNetCore.Cors;
 using BlazorWeb.Services;
 using BlazorWeb.HttpHandlers;
 
@@ -33,7 +32,7 @@ builder.Services.AddHttpClient<ApiService>(httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://localhost:7244");
 })
-     //.AddHttpMessageHandler<JwtAuthorizationHandler>()
+    //.AddHttpMessageHandler<JwtAuthorizationHandler>()
     .AddHttpMessageHandler<IncludeCookieHandler>()
     .AddHttpMessageHandler<SetAuthHeaderHandler>()
     .AddHttpMessageHandler<RefreshTokenHandler>()

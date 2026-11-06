@@ -76,9 +76,7 @@
 
         <div class="card-body">
 
-            <EditForm Model="@scheduleRequest"
-                      OnValidSubmit="@CreateScheduleButton"
-                      FormName="createSchedule">
+            <EditForm Model="@scheduleRequest" OnValidSubmit="@CreateScheduleButton">
 
                 <DataAnnotationsValidator />
 
@@ -90,12 +88,9 @@
                             Actuator
                         </label>
 
-                        <select id="actuatorId"
-                                class="form-select"
-                                @bind="scheduleRequest.ActuatorId"
-                                required>
+                        <InputSelect @bind-Value="scheduleRequest.ActuatorId" class="form-select" id="actuatorId">
 
-                            <option value="0">Select actuator</option>
+                        <option value="0">Select actuator</option>
 
                             @if (actuatorResponse != null)
                             {
@@ -106,8 +101,7 @@
                                     </option>
                                 }
                             }
-
-                        </select>
+                         </InputSelect>
                     </div>
 
                     <!-- From Time -->
@@ -116,11 +110,7 @@
                             From Time
                         </label>
 
-                        <input type="time"
-                               id="fromTime"
-                               class="form-control"
-                               @bind="scheduleRequest.StartTime"
-                               required>
+                     <InputDate @bind-Value="scheduleRequest.StartTime" Type="InputDateType.Time" id="startTime"  class="form-control" />
                     </div>
 
                     <!-- Until Time -->
@@ -129,11 +119,7 @@
                             Until Time
                         </label>
 
-                        <input type="time"
-                               id="untilTime"
-                               class="form-control"
-                               @bind="scheduleRequest.EndTime"
-                               required>
+                     <InputDate @bind-Value="scheduleRequest.EndTime" Type="InputDateType.Time" id="endTime" class="form-control" />
                     </div>
 
                     <!-- Day of Week -->
@@ -142,10 +128,7 @@
                             Day of Week
                         </label>
 
-                        <select id="dayOfWeek"
-                                class="form-select"
-                                @bind="scheduleRequest.DayOfWeek"
-                                required>
+                        <InputSelect id="dayOfWeek" class="form-select" @bind-value="scheduleRequest.DayOfWeek" required>
 
                             <option value="">Select day</option>
                             <option value="Monday">Monday</option>
@@ -156,15 +139,13 @@
                             <option value="Saturday">Saturday</option>
                             <option value="Sunday">Sunday</option>
 
-                        </select>
+                        </InputSelect>
                     </div>
 
                     <!-- Buttons -->
                     <div class="col-12 col-md-2">
                         <div class="d-flex gap-2">
-
-                            <SubmitButton @ref="submitButton">Submit</SubmitButton>
-
+                            <SubmitButton @ref="submitButton">@(scheduleId.HasValue ? "Update" : "Create")</SubmitButton>
                         </div>
                     </div>
 
@@ -192,6 +173,7 @@
             <th>DayOfWeek</th>
             <th>StartTime</th>
             <th>EndTime</th>
+            <th>#</th>
         </tr>
     </thead>
     <tbody>
@@ -203,6 +185,18 @@
                 <td>@schedule.DayOfWeek</td>
                 <td>@schedule.StartTime</td>
                 <td>@schedule.EndTime</td>
+                <td>
+                <button type="button"
+                        class="btn btn-danger"
+                        @onclick="() => EditSchedule(schedule)">
+                    Edit
+                </button>
+                <button type="button"
+                        class="btn btn-danger"
+                        @onclick="() => DeleteSchedule(schedule.Id)">
+                    Delete
+                </button>
+                </td>
             </tr>
         }
     </tbody>
@@ -219,6 +213,7 @@
 
     private ScheduleRequest scheduleRequest = new();
     private List<ScheduleResponse> scheduleResponse = new();
+    private int? scheduleId = null;
 
     private SubmitButton submitButton;
 
@@ -261,17 +256,49 @@
     {
         try
         {
-            Console.WriteLine(scheduleRequest.ActuatorId);
-            Console.WriteLine(scheduleRequest.DayOfWeek);
-            Console.WriteLine(scheduleRequest.StartTime);
-            Console.WriteLine(scheduleRequest.EndTime);
-            submitButton.Disable();
-            await _apiService.Post<ScheduleRequest>("/schedule/create", scheduleRequest);
+            if (scheduleId.HasValue)
+            {
+                submitButton.Disable();
+                await _apiService.Put<ScheduleRequest>($"schedule/update/{scheduleId}", scheduleRequest);
+                await GetAllSchedule();
+                scheduleId = null;
+                submitButton.Enable();
+            }
+            else
+            {
+                submitButton.Disable();
+                await _apiService.Post<ScheduleRequest>("/schedule/create", scheduleRequest);
+                await GetAllSchedule();
+                submitButton.Enable();
+            }
         }
         catch (ApplicationException ex)
         {
             submitButton.Enable();
         }
+    }
 
+    private void EditSchedule(ScheduleResponse schedule)
+    {
+        scheduleId = schedule.Id;
+
+         scheduleRequest = new ScheduleRequest
+         {
+                ActuatorId = schedule.ActuatorId,
+                DayOfWeek = schedule.DayOfWeek,
+                StartTime = schedule.StartTime,
+                EndTime = schedule.EndTime
+         };
+    }
+
+    private async Task DeleteSchedule(int scheduleId)
+    {
+        await _apiService.Delete($"schedule/delete/{scheduleId}");
+        await GetAllSchedule();
+    }
+
+    private async Task GetAllSchedule()
+    {  
+        scheduleResponse = await _apiService.Get<List<ScheduleResponse>>("/schedule/get-schedules");
     }
 }
