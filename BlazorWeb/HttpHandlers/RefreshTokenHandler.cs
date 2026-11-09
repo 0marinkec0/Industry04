@@ -1,5 +1,4 @@
-﻿
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using BlazorWeb.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;

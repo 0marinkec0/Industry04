@@ -13,197 +13,204 @@
 
 <div class="container-fluid px-0">
 
- <h2 class="mb-4">Actuator Control</h2>
+    <h2 class="mb-4">Actuator Control</h2>
 
-<table class="table table-striped align-middle">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>ID</th>
-            <th>Mode</th>
-            @if (ShowState)
-            {
-                <th>State</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var actuator in actuatorResponse)
-        {
-            <tr @key="actuator.Id">
-                <td>@actuator.Name</td>
-                <td>@actuator.Id</td>
-                <td>
-                    <button type="button"
-                            class="btn btn-sm @(actuator.Mode == "Automatic"
-                                                            ? "btn-success"
-                                                            : "btn-outline-secondary")"
-                        aria-pressed="@(actuator.Mode == "Automatic")"
-                        @onclick="() => ToggleMode(actuator)">
-                    @actuator.Mode
-                </button>
-                </td>
-                 @if (actuator.Mode == "Manual")
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>ID</th>
+                <th>Mode</th>
+                @if (ShowState)
                 {
-                    <td>
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-success btn-sm"
-                                @onclick='() => ActuatorStateControl(actuator.Id, "ON")'>
-                            ON
-                        </button>
-
-                        <button class="btn btn-danger btn-sm"
-                                @onclick='(() => ActuatorStateControl(actuator.Id, "OFF"))'>
-                            OFF
-                        </button>
-                    </div>
-                    </td>
-                } 
+                    <th>State</th>
+                }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var actuator in actuatorResponse)
+            {
+                <tr @key="actuator.Id">
+                    <td>@actuator.Name</td>
+                    <td>@actuator.Id</td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-sm @(actuator.Mode == "Automatic"
+                                                                                            ? "btn-success"
+                                                                                            : "btn-outline-secondary")"
+                            aria-pressed="@(actuator.Mode == "Automatic")"
+                            @onclick="() => ToggleMode(actuator)">
+                        @actuator.Mode
+                    </button>
+                </td>
+                @if (actuator.Mode == "Manual")
+                    {
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-success btn-sm"
+                                        @onclick='() => ActuatorStateControl(actuator.Id, "ON")'>
+                                    ON
+                                </button>
 
- <section class="mt-5">
+                                <button class="btn btn-danger btn-sm"
+                                        @onclick='(() => ActuatorStateControl(actuator.Id, "OFF"))'>
+                                    OFF
+                                </button>
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
 
-  <h2 class="mb-4"> Schedule for automatic mode </h2>
+    <section class="mt-5">
 
-    <div class="card shadow-sm w-100">
+        <h2 class="mb-4"> Schedule for automatic mode </h2>
 
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Create Schedule</h5>
-        </div>
+        <div class="card shadow-sm w-100">
 
-        <div class="card-body">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Create Schedule</h5>
+            </div>
 
-            <EditForm Model="@scheduleRequest" OnValidSubmit="@CreateScheduleButton">
+            <div class="card-body">
 
-                <DataAnnotationsValidator />
+                <EditForm Model="@scheduleRequest" OnValidSubmit="@CreateScheduleButton">
 
-                <div class="row g-3 align-items-end">
+                    <DataAnnotationsValidator />
 
-                    <!-- Actuator -->
-                    <div class="col-12 col-md-2">
-                        <label for="actuatorId" class="form-label">
-                            Actuator
-                        </label>
+                    <div class="row g-3 align-items-end">
 
-                        <InputSelect @bind-Value="scheduleRequest.ActuatorId" class="form-select" id="actuatorId">
+                        <!-- Actuator -->
+                        <div class="col-12 col-md-2">
+                            <label for="actuatorId" class="form-label">
+                                Actuator
+                            </label>
 
-                        <option value="0">Select actuator</option>
+                            <InputSelect @bind-Value="scheduleRequest.ActuatorId" class="form-select" id="actuatorId">
 
-                            @if (actuatorResponse != null)
-                            {
-                                @foreach (var actuator in actuatorResponse)
+                                <option value="0">Select actuator</option>
+
+                                @if (actuatorResponse != null)
                                 {
-                                    <option value="@actuator.Id">
-                                        @actuator.Name (ID: @actuator.Id)
-                                    </option>
+                                    @foreach (var actuator in actuatorResponse)
+                                    {
+                                        <option value="@actuator.Id">
+                                            @actuator.Name (ID: @actuator.Id)
+                                        </option>
+                                    }
                                 }
-                            }
-                         </InputSelect>
-                    </div>
-
-                    <!-- From Time -->
-                    <div class="col-12 col-md-2">
-                        <label for="fromTime" class="form-label">
-                            From Time
-                        </label>
-
-                     <InputDate @bind-Value="scheduleRequest.StartTime" Type="InputDateType.Time" id="startTime"  class="form-control" />
-                    </div>
-
-                    <!-- Until Time -->
-                    <div class="col-12 col-md-2">
-                        <label for="untilTime" class="form-label">
-                            Until Time
-                        </label>
-
-                     <InputDate @bind-Value="scheduleRequest.EndTime" Type="InputDateType.Time" id="endTime" class="form-control" />
-                    </div>
-
-                    <!-- Day of Week -->
-                    <div class="col-12 col-md-4">
-                        <label for="dayOfWeek" class="form-label">
-                            Day of Week
-                        </label>
-
-                        <InputSelect id="dayOfWeek" class="form-select" @bind-value="scheduleRequest.DayOfWeek" required>
-
-                            <option value="">Select day</option>
-                            <option value="Monday">Monday</option>
-                            <option value="Tuesday">Tuesday</option>
-                            <option value="Wednesday">Wednesday</option>
-                            <option value="Thursday">Thursday</option>
-                            <option value="Friday">Friday</option>
-                            <option value="Saturday">Saturday</option>
-                            <option value="Sunday">Sunday</option>
-
-                        </InputSelect>
-                    </div>
-
-                    <!-- Buttons -->
-                    <div class="col-12 col-md-2">
-                        <div class="d-flex gap-2">
-                            <SubmitButton @ref="submitButton">@(scheduleId.HasValue ? "Update" : "Create")</SubmitButton>
+                            </InputSelect>
                         </div>
+
+                        <!-- From Time -->
+                        <div class="col-12 col-md-2">
+                            <label for="fromTime" class="form-label">
+                                From Time
+                            </label>
+
+                            <InputDate @bind-Value="scheduleRequest.StartTime" Type="InputDateType.Time" id="startTime" class="form-control" />
+                        </div>
+
+                        <!-- Until Time -->
+                        <div class="col-12 col-md-2">
+                            <label for="untilTime" class="form-label">
+                                Until Time
+                            </label>
+
+                            <InputDate @bind-Value="scheduleRequest.EndTime" Type="InputDateType.Time" id="endTime" class="form-control" />
+                        </div>
+
+                        <!-- Day of Week -->
+                        <div class="col-12 col-md-4">
+                            <label for="dayOfWeek" class="form-label">
+                                Day of Week
+                            </label>
+
+                            <InputSelect id="dayOfWeek" class="form-select" @bind-value="scheduleRequest.DayOfWeek" required>
+
+                                <option value="">Select day</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+
+                            </InputSelect>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="col-12 col-md-2">
+                            <div class="d-flex gap-2">
+                                <SubmitButton @ref="submitButton">@(scheduleId.HasValue ? "Update" : "Create")</SubmitButton>
+                            </div>
+                        </div>
+
                     </div>
 
+                    <ValidationSummary class="text-danger mt-3" />
+
+                </EditForm>
+
+                <!-- Result -->
+                <div id="result"
+                     class="alert alert-success mt-3 d-none">
                 </div>
-
-                <ValidationSummary class="text-danger mt-3" />
-
-            </EditForm>
-
-            <!-- Result -->
-            <div id="result"
-                 class="alert alert-success mt-3 d-none">
             </div>
         </div>
-    </div>
+    </section>
 
 
+    <section>
+        <div class="mt-4">
+            @foreach (var group in scheduleResponse.GroupBy(x => x.ActuatorId).OrderBy(g => g.Key))
+            {
+                <div class="mb-4" @key="group.Key">
 
-<div class="mt-4">
-   <table class="table table-striped align-middle">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>ActuatorId</th>
-            <th>DayOfWeek</th>
-            <th>StartTime</th>
-            <th>EndTime</th>
-            <th>#</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var schedule in scheduleResponse)
-        {
-            <tr @key="schedule.Id">
-                <td>@schedule.Id</td>
-                <td>@schedule.ActuatorId</td>
-                <td>@schedule.DayOfWeek</td>
-                <td>@schedule.StartTime</td>
-                <td>@schedule.EndTime</td>
-                <td>
-                <button type="button"
-                        class="btn btn-danger"
-                        @onclick="() => EditSchedule(schedule)">
-                    Edit
-                </button>
-                <button type="button"
-                        class="btn btn-danger"
-                        @onclick="() => DeleteSchedule(schedule.Id)">
-                    Delete
-                </button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-</div>
+                    <h4 class="mb-3">Actuator @group.Key</h4>
 
- </section>
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>DayOfWeek</th>
+                                <th>StartTime</th>
+                                <th>EndTime</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var schedule in group.OrderBy(x => Array.IndexOf(days, x.DayOfWeek.ToString())))
+                            {
+                                <tr @key="schedule.Id">
+                                    <td>@schedule.Id</td>
+                                    <td>@schedule.DayOfWeek</td>
+                                    <td>@schedule.StartTime</td>
+                                    <td>@schedule.EndTime</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-primary me-2"
+                                                @onclick="() => EditSchedule(schedule)">
+                                            Edit
+                                        </button>
+
+                                        <button type="button"
+                                                class="btn btn-danger"
+                                                @onclick="() => DeleteSchedule(schedule.Id)">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </section>
 </div>
 
 
@@ -216,6 +223,16 @@
     private int? scheduleId = null;
 
     private SubmitButton submitButton;
+
+    private readonly string[] days ={
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+    };
 
     protected override async Task OnInitializedAsync()
     {
@@ -282,13 +299,13 @@
     {
         scheduleId = schedule.Id;
 
-         scheduleRequest = new ScheduleRequest
-         {
-                ActuatorId = schedule.ActuatorId,
-                DayOfWeek = schedule.DayOfWeek,
-                StartTime = schedule.StartTime,
-                EndTime = schedule.EndTime
-         };
+        scheduleRequest = new ScheduleRequest
+        {
+            ActuatorId = schedule.ActuatorId,
+            DayOfWeek = schedule.DayOfWeek,
+            StartTime = schedule.StartTime,
+            EndTime = schedule.EndTime
+        };
     }
 
     private async Task DeleteSchedule(int scheduleId)
@@ -298,7 +315,7 @@
     }
 
     private async Task GetAllSchedule()
-    {  
+    {
         scheduleResponse = await _apiService.Get<List<ScheduleResponse>>("/schedule/get-schedules");
     }
 }

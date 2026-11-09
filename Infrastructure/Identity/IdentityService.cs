@@ -1,13 +1,9 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Shared.Respons;
 using Shared.ResultService;
-using System.Security.Claims;
 
 namespace Infrastructure.Identity;
 

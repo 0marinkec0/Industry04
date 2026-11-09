@@ -3,31 +3,28 @@ using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.MinimalAPI.AuthApi
+namespace API.MinimalAPI.AuthApi;
+public class RevokeRefreshTokenEndpoint : ICarterModule
 {
-    public class RevokeRefreshTokenEndpoint : ICarterModule
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
-        public void AddRoutes(IEndpointRouteBuilder app)
+        app.MapPost("auth/revoke-refresh-token", async ([FromBody]RevokeRefreshTokenCommand command ,IMediator mediator, HttpResponse response) =>
         {
-            app.MapPost("auth/revoke-refresh-token", async ([FromBody]RevokeRefreshTokenCommand command ,IMediator mediator, HttpResponse response) =>
+            var result = mediator.Send(command);
+
+            if (result.Result.IsSuccess)
             {
-                var result = mediator.Send(command);
-
-                if (result.Result.IsSuccess)
+                response.Cookies.Delete("refresh_token", new CookieOptions
                 {
-                    response.Cookies.Delete("refresh_token", new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
-                        Path = "/"
-                    });
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Path = "/"
+                });
 
-                    return Results.Ok();
-                }
-
-                return Results.BadRequest();
-            });
-        }
+                return Results.Ok();
+            }
+            return Results.BadRequest();
+        });
     }
 }

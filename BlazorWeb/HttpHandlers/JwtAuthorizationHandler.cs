@@ -17,11 +17,11 @@ public class JwtAuthorizationHandler : DelegatingHandler
     {
         try
         {
-            var token = await _localStorageService.GetItemAsync<TokenResponse>("accessToken");
+            var token = await _localStorageService.GetItemAsync<string>("accessToken");
 
-            if (!string.IsNullOrEmpty(token.AccessToken))
+            if (!string.IsNullOrEmpty(token))
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
         }
         catch (Exception ex)
@@ -31,5 +31,4 @@ public class JwtAuthorizationHandler : DelegatingHandler
 
         return await base.SendAsync(request, cancellationToken);
     }
-
 }

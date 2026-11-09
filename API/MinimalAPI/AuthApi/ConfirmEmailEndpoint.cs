@@ -2,21 +2,19 @@
 using Carter;
 using MediatR;
 
-namespace API.MinimalAPI.AuthApi
+namespace API.MinimalAPI.AuthApi;
+public class ConfirmEmailEndpoint : ICarterModule
 {
-    public class ConfirmEmailEndpoint : ICarterModule
+    public void AddRoutes(IEndpointRouteBuilder app)
     {
-        public void AddRoutes(IEndpointRouteBuilder app)
+        app.MapPost("auth/confirm-email", async (ConfirmEmailCommand command, IMediator mediator) =>
         {
-            app.MapPost("auth/confirm-email", async (ConfirmEmailCommand command, IMediator mediator) =>
-            {
-                var result = await mediator.Send(command);
+            var result = await mediator.Send(command);
 
-                if (result.IsSuccess)
-                    return Results.Ok();
+            if (result.IsSuccess)
+                return Results.Ok();
 
-                return Results.BadRequest();
-            });
-        }
+            return Results.BadRequest();
+        });
     }
 }
