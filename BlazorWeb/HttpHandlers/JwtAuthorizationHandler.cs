@@ -1,8 +1,7 @@
 ﻿using Blazored.LocalStorage;
-using Shared.Respons.Auth;
 using System.Net.Http.Headers;
 
-namespace Web.HttpHandlers;
+namespace BlazorWeb.HttpHandlers;
 
 public class JwtAuthorizationHandler : DelegatingHandler
 {

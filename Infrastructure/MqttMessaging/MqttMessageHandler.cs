@@ -3,12 +3,9 @@ using Application.Interfaces;
 using Infrastructure.SignalR.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Shared.Respons;
 using Shared.Respons.Sensor;
 
-
 namespace Infrastructure.Messaging;
-
 public class MqttMessageHandler : IMqttMessageHandler
 {
     private readonly SensorProcessor _sensorProcessor;

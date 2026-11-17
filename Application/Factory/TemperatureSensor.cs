@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces;
-using Domain.Enities;
+using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Factory;
@@ -17,7 +17,6 @@ public class TemperatureSensor : ISensorFactory
             Value = value,
             Time = DateTime.Now
         };
-
         return sensor;
     }
 }

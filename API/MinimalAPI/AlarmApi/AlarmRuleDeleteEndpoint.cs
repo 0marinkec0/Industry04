@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.AlarmRules.DeleteRule;
+﻿using Application.Features.Alarm.Commands.DeleteRule;
 using Carter;
 using MediatR;
 

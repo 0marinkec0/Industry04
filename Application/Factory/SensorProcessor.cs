@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces;
-using Domain.Enities;
+using Domain.Entities;
 using System.Globalization;
 
 namespace Application.Factory;

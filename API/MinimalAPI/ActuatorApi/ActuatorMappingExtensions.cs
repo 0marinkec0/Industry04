@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.ActuatorControl.ActuatorControl.ActuatorModeChange;
+﻿using Application.Features.Actuator.Commands.ActuatorControl.ActuatorModeChange;
 using Shared.Requests.Actuator;
 
 namespace API.MinimalAPI.ActuatorApi;

@@ -1,7 +1,6 @@
-﻿using Application.Features.Commands.ActuatorControl.ActuatorControl;
+﻿using Application.Features.Actuator.Commands.ActuatorControl.ActuatorControl;
 using Carter;
 using MediatR;
-
 
 namespace API.MinimalAPI.ActuatorAPI;
 

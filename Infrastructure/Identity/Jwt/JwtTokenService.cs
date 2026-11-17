@@ -19,7 +19,6 @@ public class JwtTokenService : IJwtTokenService
         _jwtSettings = jwtSettings.Value;
         _userManager = userManager;
     }
-
     public async Task<TokensDTO> GenerateUserTokenService(List<Claim> claims, User user)
     {
         var accessToken = GenerateAccessToken(claims);
@@ -36,7 +35,6 @@ public class JwtTokenService : IJwtTokenService
             RefreshToken = refreshToken
         };
     }
-
     private string GenerateRefreshToken()
     {
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));

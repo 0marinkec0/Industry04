@@ -1,7 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using System.Net.Http.Headers;
 
-namespace Web.HttpHandlers;
+namespace BlazorWeb.HttpHandlers;
 public class SetAuthHeaderHandler : DelegatingHandler
 {
     private readonly ILocalStorageService _localStorageService;

@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.ScheduleRule.UpdateSchedule;
+﻿using Application.Features.Schedules.Commands.UpdateSchedule;
 using Shared.Requests.Schedule;
 
 namespace API.MinimalAPI.ScheduleApi;

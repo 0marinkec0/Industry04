@@ -1,17 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace Infrastructure.Database
+namespace Infrastructure.Database;
+
+public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
-    public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    public AppDbContext CreateDbContext(string[] args)
     {
-        public AppDbContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-            optionsBuilder.UseSqlite("Data Source=D:/.NET Programiranje/.NET Learning/Mqtt_IoT/Infrastructure/Database.db");
+        optionsBuilder.UseSqlite("Data Source=D:/.NET Programiranje/.NET Learning/Mqtt_IoT/Infrastructure/Database.db");
 
-            return new AppDbContext(optionsBuilder.Options);
-        }
+        return new AppDbContext(optionsBuilder.Options);
     }
 }

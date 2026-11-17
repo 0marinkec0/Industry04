@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.ScheduleRule.CreateSchedule;
+﻿using Application.Features.Schedules.Commands.CreateSchedule;
 using Carter;
 using MediatR;
 

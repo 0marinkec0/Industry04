@@ -2,14 +2,12 @@
 using Shared.Respons.Alarm;
 using Shared.Respons.Sensor;
 
-namespace Web.Services;
+namespace BlazorWeb.Services;
 
 public class HubService : IAsyncDisposable
 {
     private readonly HubConnection _connection;
-
     public event Action<SensorReading>? SensorReadingUpdate;
-
     public event Action<List<AlarmNotificationResponse>>? AlarmNotificationResponseUpdate;
     public HubService()
     {
@@ -36,7 +34,6 @@ public class HubService : IAsyncDisposable
                 AlarmNotificationResponseUpdate?.Invoke(alarm);
             });
     }
-
     public async Task StartAsync()
     {
         if (_connection.State == HubConnectionState.Disconnected)
@@ -47,7 +44,6 @@ public class HubService : IAsyncDisposable
             await _connection.StartAsync();
         }
     }
-
     public async ValueTask DisposeAsync()
     {
         await _connection.DisposeAsync();

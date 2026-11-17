@@ -1,9 +1,8 @@
 ﻿@page "/realtime"
+@using BlazorWeb.Components.Helper
+@using BlazorWeb.Services
 @using Microsoft.AspNetCore.Authorization
-@using Shared.Respons
 @using Shared.Respons.Sensor
-@using Web.Components.Helper
-@using Web.Services
 @inject HubService _hubService
 @inject ApiService _apiService
 @attribute [Authorize]

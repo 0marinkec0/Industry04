@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Services;
-
 public class EmailService : IEmailService
 {
     private readonly ILogger<EmailService> _logger;

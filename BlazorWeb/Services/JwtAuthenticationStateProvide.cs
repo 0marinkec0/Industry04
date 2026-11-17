@@ -3,19 +3,16 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Web.Services;
+namespace BlazorWeb.Services;
 
 public class JwtAuthenticationStateProvide : AuthenticationStateProvider
 {
     private readonly ILocalStorageService _localStorage;
-
     private static readonly AuthenticationState Anonymous = new(new ClaimsPrincipal(new ClaimsIdentity()));
-
     public JwtAuthenticationStateProvide(ILocalStorageService localStorage)
     {
         _localStorage = localStorage;
     }
-
     public async override Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var accessToken = await _localStorage.GetItemAsync<string>("accessToken");
@@ -26,7 +23,6 @@ public class JwtAuthenticationStateProvide : AuthenticationStateProvider
         return new AuthenticationState(new ClaimsPrincipal
             (new ClaimsIdentity(ParseClaimsFromJwt(accessToken), "jwtAuth")));
     }
-
     public async Task InitializeAsync()
     {
         var token = await _localStorage.GetItemAsync<string>("accessToken");
@@ -46,7 +42,6 @@ public class JwtAuthenticationStateProvide : AuthenticationStateProvider
 
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
     }
-
     public void NotifyUserAuthentication(string accessToken)
     { 
         var authUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(accessToken), "jwtAuth"));

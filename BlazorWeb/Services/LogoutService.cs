@@ -20,14 +20,11 @@ public class LogoutService
         {
             await _refreshTokenService.RevokeRefreshToken();
         }
-        catch
-        { 
-        }
+        catch  { }
         finally
         {
             await _localStorageService.ClearAsync();
             _navigationManager.NavigateTo("login", true);
         }
-
     }
 }

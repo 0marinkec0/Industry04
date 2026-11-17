@@ -1,27 +1,26 @@
 ﻿using Shared.Enum;
 
-namespace Web.Components.Helper
-{
-    public class GetUnitHelper
-    {
-        public static string GetUnit(string sensorType)
-        {
-            return sensorType switch
-            {
-                "Temperature" => "°C",
-                "Humidity" => "%",
-                _ => ""
-            };
-        }
+namespace BlazorWeb.Components.Helper;
 
-        public static string GetUnit(SensorType sensorType)
+public class GetUnitHelper
+{
+    public static string GetUnit(string sensorType)
+    {
+        return sensorType switch
         {
-            return sensorType.ToString() switch
-            {
-                "Temperature" => "°C",
-                "Humidity" => "%",
-                _ => ""
-            };
-        }
+            "Temperature" => "°C",
+            "Humidity" => "%",
+            _ => ""
+        };
+    }
+
+    public static string GetUnit(SensorType sensorType)
+    {
+        return sensorType.ToString() switch
+        {
+            "Temperature" => "°C",
+            "Humidity" => "%",
+            _ => ""
+        };
     }
 }

@@ -1,15 +1,12 @@
 ﻿@page "/Login"
+@using BlazorWeb.Common.Exceptions
 @using BlazorWeb.Components
-@using Blazored.LocalStorage;
+@using BlazorWeb.Components.Helper
+@using BlazorWeb.Services
 @using Microsoft.AspNetCore.Components.Authorization
-@using Shared.Requests
 @using Shared.Requests.Auth
 @using Shared.Respons
 @using Shared.Respons.Auth
-@using Shared.ResultService
-@using Web.Common.Exceptions
-@using Web.Components.Helper
-@using Web.Services
 @inject ApiService _apiService
 @inject NavigationManager _navigationManager
 @inject Blazored.LocalStorage.ILocalStorageService _localStorageService
@@ -50,15 +47,15 @@
 
     private List<FailureError> errorMessage = new();
     private LoginRequest loginRequest = new();
-    private SubmitButton submitButton;
+    private SubmitButton? submitButton;
 
-    private CustomValidation CustomValidation;
+    private CustomValidation? CustomValidation;
 
     private async Task SubmitLogin()
     {
         try
         {
-            submitButton.Disable();
+            submitButton!.Disable();
             var tokenResponse = await _apiService.Post<LoginRequest, TokenResponse>("/auth/login", loginRequest);
             await _localStorageService.SetItemAsync("accessToken", tokenResponse.AccessToken);
 
@@ -67,9 +64,9 @@
         }
         catch(ValidationException ex)
         {
-            submitButton.Enable();
+            submitButton!.Enable();
             errorMessage = ex.ErrorsGrouped;
-            CustomValidation.AddErrors(ex.ErrorsGrouped);
+            CustomValidation!.AddErrors(ex.ErrorsGrouped);
         }
     }
 }

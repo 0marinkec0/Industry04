@@ -1,9 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Shared.Respons.Auth;
-using System.Net.Http.Json;
 using System.Security.Claims;
-using Web.Services;
 
 namespace BlazorWeb.Services;
 public class RefreshTokenService
@@ -35,7 +33,6 @@ public class RefreshTokenService
 
         return true;
     }
-
     public async Task RevokeRefreshToken()
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();

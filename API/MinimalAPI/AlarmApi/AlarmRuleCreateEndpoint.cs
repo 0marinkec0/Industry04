@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.AlarmRules.CreateRule;
+﻿using Application.Features.Alarm.Commands.CreateRule;
 using Carter;
 using MediatR;
 

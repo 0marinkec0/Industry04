@@ -1,13 +1,10 @@
 ﻿@page "/Register"
+@using BlazorWeb.Common.Exceptions
 @using BlazorWeb.Components
-@using Shared.Requests
+@using BlazorWeb.Components.Helper
+@using BlazorWeb.Services
 @using Shared.Requests.Auth
 @using Shared.Respons
-@using Shared.ResultService
-@using Web.Common.Exceptions
-@using Web.Components.Helper
-@using Web.HttpHandlers
-@using Web.Services
 @inject ApiService _apiService
 
 @if(!IsRegistered)
@@ -66,8 +63,8 @@ else
     private RegisterRequest registerRequest = new();
     private List<FailureError> errorMessage = new();
 
-    private SubmitButton submitButton;
-    private CustomValidation CustomValidation;
+    private SubmitButton? submitButton;
+    private CustomValidation? CustomValidation;
 
     private bool IsRegistered;
 
@@ -75,15 +72,15 @@ else
     {
         try
         {
-            submitButton.Disable();
+            submitButton!.Disable();
             await _apiService.Post<RegisterRequest>("/auth/register", registerRequest);
             IsRegistered = true;
         }
         catch (ValidationException ex)
         {
-            submitButton.Enable();
+            submitButton!.Enable();
             errorMessage = ex.ErrorsGrouped;
-            CustomValidation.AddErrors(ex.ErrorsGrouped);
+            CustomValidation!.AddErrors(ex.ErrorsGrouped);
         }
     }
 }

@@ -12,7 +12,6 @@ public class User : IdentityUser<int>
     {
         return new User { UserName = userName, Email = email };
     }
-
     public static List<Claim> GetClaims(User user)
     {
         return new List<Claim>

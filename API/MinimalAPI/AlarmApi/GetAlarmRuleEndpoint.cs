@@ -1,4 +1,4 @@
-﻿using Application.Features.Queries.GetAlarmRules;
+﻿using Application.Features.Alarm.Queries.GetAlarmRules;
 using Carter;
 using MediatR;
 

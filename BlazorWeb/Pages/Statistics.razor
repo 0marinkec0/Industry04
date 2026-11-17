@@ -1,12 +1,9 @@
 ﻿@page "/statistics"
+@using BlazorWeb.Common.Exceptions
+@using BlazorWeb.Components.Helper
+@using BlazorWeb.Services
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Routing
-@using Shared.Respons
 @using Shared.Respons.Sensor
-@using Web.Common.Exceptions
-@using Web.Components.Helper
-@using Web.Services
 @inject NavigationManager _navigationManager
 @inject ApiService _apiService
 @inject Blazored.LocalStorage.ILocalStorageService _localStorageService

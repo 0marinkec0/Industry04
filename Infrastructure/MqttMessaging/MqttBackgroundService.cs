@@ -11,7 +11,6 @@ public class MqttBackgroundService : BackgroundService
 {
     private readonly IMqttService _mqttService;
     private readonly MqttOptions _options;
-
     private readonly IMqttClient _mqttClient;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
@@ -41,7 +40,6 @@ public class MqttBackgroundService : BackgroundService
       
         await Task.Delay( Timeout.Infinite, cancellationToken);
     }
-
     private async Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
     {
         var topic = e.ApplicationMessage.Topic;

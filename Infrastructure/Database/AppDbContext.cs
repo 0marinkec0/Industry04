@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces;
-using Domain.Enities;
+using Domain.Entities;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -34,14 +34,6 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>, IAp
 
     private static void IdentityConfiguration(ModelBuilder builder)
     {
-        builder.Entity<User>().Property(u => u.Email)
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Entity<User>().Property(u => u.UserName)
-            .HasMaxLength(50)
-            .IsRequired();
-
         builder.Entity<User>().ToTable("Users");
         builder.Entity<IdentityRole<int>>().ToTable("Roles");
         builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");

@@ -1,6 +1,6 @@
 ﻿using Shared.Respons;
 
-namespace Web.Common.Exceptions;
+namespace BlazorWeb.Common.Exceptions;
 
 public class ValidationException : Exception   
 {

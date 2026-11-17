@@ -61,7 +61,7 @@ public static class Configuration
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key!)),
                 ClockSkew = TimeSpan.Zero,
                 NameClaimType = JwtRegisteredClaimNames.Name,
                 RoleClaimType = "role"
@@ -80,7 +80,6 @@ public static class Configuration
 
         services.AddTransient<IEmailService, EmailService>();
         services.AddTransient<IJwtTokenService, JwtTokenService>();
-
 
         services.AddTransient<IIdentityService, IdentityService>(); 
         services.AddTransient<ISensorFactory, TemperatureSensor>();

@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces;
-using Domain.Enities;
+using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Factory;
@@ -7,7 +7,6 @@ namespace Application.Factory;
 public class HumiditySensor : ISensorFactory
 {
     public string SensorTypeName => "humidity";
-
     public Sensor Create(string deviceId, string topic, double value)
     {
         var sensor = new Sensor
@@ -18,7 +17,6 @@ public class HumiditySensor : ISensorFactory
             Value = value,
             Time = DateTime.Now
         };
-
         return sensor;
     }
 }

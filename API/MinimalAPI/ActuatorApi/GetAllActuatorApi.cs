@@ -1,4 +1,4 @@
-﻿using Application.Features.Queries.Actuator;
+﻿using Application.Features.Actuator.Queries.GetActuator;
 using Carter;
 using MediatR;
 

@@ -1,4 +1,4 @@
-﻿using Domain.Enities;
+﻿using Domain.Entities;
 using Shared.ResultService;
 
 namespace Application.Interfaces;

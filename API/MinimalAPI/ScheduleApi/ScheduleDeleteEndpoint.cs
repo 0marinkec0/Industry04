@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.ScheduleRule.DeleteSchedule;
+﻿using Application.Features.Schedules.Commands.DeleteSchedule;
 using Carter;
 using MediatR;
 

@@ -1,13 +1,9 @@
 ﻿@page "/readings"
+@using BlazorWeb.Components.Helper
+@using BlazorWeb.Services
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Routing
 @using Shared.Enum
-@using Shared.Respons
 @using Shared.Respons.Sensor
-@using Web.Common.Exceptions
-@using Web.Components.Helper
-@using Web.Services
 @inject ApiService _apiService
 @attribute [StreamRendering]
 @attribute [Authorize]

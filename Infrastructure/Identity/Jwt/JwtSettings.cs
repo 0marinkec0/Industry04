@@ -1,6 +1,4 @@
-﻿using MQTTnet.Server;
-
-namespace Infrastructure.Identity.Jwt;
+﻿namespace Infrastructure.Identity.Jwt;
 
 public class JwtSettings
 {

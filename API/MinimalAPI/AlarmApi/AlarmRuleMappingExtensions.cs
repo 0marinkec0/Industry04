@@ -1,4 +1,4 @@
-﻿using Application.Features.Commands.AlarmRules.UpdateRule;
+﻿using Application.Features.Alarm.Commands.UpdateRule;
 using Shared.Requests.Alarm;
 
 namespace API.MinimalAPI.AlarmApi;

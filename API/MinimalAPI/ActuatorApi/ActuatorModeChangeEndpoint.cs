@@ -1,11 +1,8 @@
-﻿using Application.Common;
-using Application.Features.Commands.ActuatorControl.ActuatorControl.ActuatorModeChange;
-using AutoMapper;
+﻿using AutoMapper;
 using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Requests.Actuator;
-using System.Runtime.CompilerServices;
 
 namespace API.MinimalAPI.ActuatorApi;
 

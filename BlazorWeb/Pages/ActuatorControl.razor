@@ -1,12 +1,12 @@
 ﻿@page "/actuator-control"
 @using BlazorWeb.Components
+@using BlazorWeb.Services
 @using Microsoft.AspNetCore.Authorization
 @using Shared.Enum
 @using Shared.Requests.Actuator
 @using Shared.Requests.Schedule
 @using Shared.Respons.Actuator
 @using Shared.Respons.Schedule
-@using Web.Services
 @inject ApiService _apiService
 @attribute [StreamRendering]
 @attribute [Authorize]
@@ -222,9 +222,10 @@
     private List<ScheduleResponse> scheduleResponse = new();
     private int? scheduleId = null;
 
-    private SubmitButton submitButton;
+    private SubmitButton? submitButton;
 
-    private readonly string[] days ={
+    private readonly string[] days =
+    {
     "Monday",
     "Tuesday",
     "Wednesday",
@@ -275,23 +276,23 @@
         {
             if (scheduleId.HasValue)
             {
-                submitButton.Disable();
+                submitButton!.Disable();
                 await _apiService.Put<ScheduleRequest>($"schedule/update/{scheduleId}", scheduleRequest);
                 await GetAllSchedule();
                 scheduleId = null;
-                submitButton.Enable();
+                submitButton!.Enable();
             }
             else
             {
-                submitButton.Disable();
+                submitButton!.Disable();
                 await _apiService.Post<ScheduleRequest>("/schedule/create", scheduleRequest);
                 await GetAllSchedule();
-                submitButton.Enable();
+                submitButton!.Enable();
             }
         }
         catch (ApplicationException ex)
         {
-            submitButton.Enable();
+            submitButton!.Enable();
         }
     }
 

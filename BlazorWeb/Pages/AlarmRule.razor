@@ -1,15 +1,10 @@
 ﻿@page "/alarm-rule"
 @using BlazorWeb.Components
+@using BlazorWeb.Services
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Routing
 @using Shared.Enum
-@using Shared.Requests
 @using Shared.Requests.Alarm
-@using Shared.Respons
-@using Web.Common.Exceptions
-@using Web.Components.Helper
-@using Web.Services
+@using Shared.Respons.Alarm
 @inject NavigationManager _navigationManager
 @inject ApiService _apiService
 @inject Blazored.LocalStorage.ILocalStorageService _localStorageService
@@ -102,7 +97,7 @@
 @code {
 
     private AlarmRuleRequest alarmRuleRequest = new();
-    private SubmitButton submitButton;
+    private SubmitButton? submitButton;
     private List<AlarmRuleResponse> alarmRuleResponse = new();
     private int? editRuleId = null;
 
@@ -117,18 +112,18 @@
         {
             if (editRuleId.HasValue)
             {
-                submitButton.Disable();
+                submitButton!.Disable();
                 await _apiService.Put<AlarmRuleRequest>($"alarm-rules/update/{editRuleId}", alarmRuleRequest);
                 await GetAllRules();
                 editRuleId = null;
-                submitButton.Enable();
+                submitButton!.Enable();
             }
             else
             {
-                submitButton.Disable();
+                submitButton!.Disable();
                 await _apiService.Post<AlarmRuleRequest>("alarm-rules/create", alarmRuleRequest);
                 await GetAllRules();
-                submitButton.Enable();
+                submitButton!.Enable();
             }
         }
         catch (ApplicationException ex)

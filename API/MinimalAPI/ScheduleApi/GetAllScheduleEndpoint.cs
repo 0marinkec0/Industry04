@@ -1,4 +1,4 @@
-﻿using Application.Features.Queries.Schedule;
+﻿using Application.Features.Schedules.Queries.GetSchedule;
 using Carter;
 using MediatR;
 

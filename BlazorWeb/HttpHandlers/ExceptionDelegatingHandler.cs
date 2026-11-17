@@ -1,9 +1,8 @@
-﻿using Shared.Respons;
+﻿using BlazorWeb.Common.Exceptions;
+using Shared.Respons;
 using System.Net;
-using System.Net.Http.Json;
-using Web.Common.Exceptions;
 
-namespace Web.HttpHandlers;
+namespace BlazorWeb.HttpHandlers;
 
 public class ExceptionDelegatingHandler : DelegatingHandler
 {
@@ -38,6 +37,6 @@ public class ExceptionDelegatingHandler : DelegatingHandler
         if (errors != null)
             throw new ValidationException(errors);
         else
-            throw new ApplicationException(errors.Detail);     
+            throw new ApplicationException(errors!.Detail);     
     }
 }

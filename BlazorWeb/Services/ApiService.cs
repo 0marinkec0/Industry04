@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Net.Http.Json;
 
-namespace Web.Services;
+namespace BlazorWeb.Services;
 
 public class ApiService
 {
@@ -32,10 +30,9 @@ public class ApiService
     }
     public async Task PostQuery(string relativeUrl, Dictionary<string, string> queryParams)
     {
-        var url = QueryHelpers.AddQueryString(relativeUrl, queryParams);
+        var url = QueryHelpers.AddQueryString(relativeUrl, queryParams!);
 
         var resposne = await _httpClient.PostAsync(url, null);
-
     }
     public async Task Delete(string relativeUrl)
     { 

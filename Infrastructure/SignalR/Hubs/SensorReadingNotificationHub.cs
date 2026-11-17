@@ -1,16 +1,12 @@
-﻿using Domain.Enities;
+﻿using Domain.Entities;
 using Microsoft.AspNetCore.SignalR;
 using Shared.Respons.Sensor;
 
-namespace Infrastructure.SignalR.Hubs
-{
-    public interface ISensorReadingNotificationClient
-    { 
-        Task SensorReadingStatusUpdate(SensorReading sensor);
+namespace Infrastructure.SignalR.Hubs;
 
-        Task AlarmNotifiactionUpdate(List<AlarmEvent> alarmEvent);
-    }
-    public class SensorReadingNotificationHub : Hub<ISensorReadingNotificationClient>
-    {
-    }
+public interface ISensorReadingNotificationClient
+{ 
+    Task SensorReadingStatusUpdate(SensorReading sensor);
+    Task AlarmNotifiactionUpdate(List<AlarmEvent> alarmEvent);
 }
+public class SensorReadingNotificationHub : Hub<ISensorReadingNotificationClient>;
