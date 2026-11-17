@@ -14,7 +14,7 @@ namespace Application.Features.Commands.AlarmRules.CreateRule
             _iotContext = iotContext;
         }
 
-        public async Task<Unit> Handle(AlarmRuleCreateCommand request, CancellationToken cancellationToken)
+        public async Task Handle(AlarmRuleCreateCommand request, CancellationToken cancellationToken)
         {
             var alarmRule = new AlarmRule
             {
@@ -27,8 +27,6 @@ namespace Application.Features.Commands.AlarmRules.CreateRule
             await _iotContext.AlarmRules.AddAsync(alarmRule);
 
             await _iotContext.SaveChangesAsync();
-
-            return Unit.Value;
         }
     }
 }

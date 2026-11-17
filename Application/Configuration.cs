@@ -4,21 +4,23 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Application
+namespace Application;
+
+public static class Configuration
 {
-    public static class Configuration
+    public static IServiceCollection AddApplicationSerivces(this IServiceCollection services)
     {
-        public static IServiceCollection AddApplicationSerivces(this IServiceCollection services)
+        var assembly = Assembly.GetExecutingAssembly();
+
+        services.AddMediatR(cfg =>
         {
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            cfg.RegisterServicesFromAssembly(assembly);
 
-            var assembly = typeof(FluentValidation.IValidator).Assembly;
+            cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+        });
 
-            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddValidatorsFromAssembly(assembly);
 
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-
-            return services;
-        }
+        return services;
     }
 }

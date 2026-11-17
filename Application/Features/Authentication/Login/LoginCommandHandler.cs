@@ -8,7 +8,7 @@ namespace Application.Features.Authentication.Login;
 
 public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<TokensDTO>>
 {
-    private readonly IIdentityService _identityService;
+    private readonly IIdentityService _identityService; 
 
     public LoginCommandHandler(IIdentityService identityService)
     {
