@@ -195,37 +195,3 @@ Run the application using the appropriate backend and frontend project configura
 The project currently includes core IoT monitoring, backend processing, data persistence, authentication, real-time communication, alarm rules, and actuator control functionality.
 
 The system is actively evolving, with further improvements and extensions planned.
-
-## Roadmap
-
-Potential future improvements:
-
-- [ ] Expand monitoring dashboard and data visualization
-- [ ] Improve alarm management and notification capabilities
-- [ ] Extend automation and scheduling capabilities
-- [ ] Add support for additional sensors and actuators
-- [ ] Improve deployment and configuration documentation
-- [ ] Containerized deployment
-- [ ] Add automated tests across application layers
-
-## Screenshots
-
-_Add screenshots or GIFs of the dashboard, monitoring charts, alarm configuration, and actuator controls here._
-
-<!--
-Example:
-
-![Dashboard](docs/images/dashboard.png)
-![Alarm Configuration](docs/images/alarms.png)
-![Actuator Control](docs/images/actuators.png)
--->
-
-## License
-
-License information has not yet been specified.
-
----
-
-<p align="center">
-  Built as an exploration of IoT, real-time systems, and modern .NET application architecture.
-</p>
